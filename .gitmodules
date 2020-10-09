@@ -1,0 +1,18 @@
+[submodule "planet-mov/utils/Catch2"]
+	path = external/Catch2
+	url = https://github.com/flingengine/Catch2.git
+
+
+[submodule "planet-mov/utils/entt"]
+	path = external/entt
+	url = https://github.com/flingengine/entt.git
+
+
+[submodule "planet-mov/utils/jsoncpp"]
+	path = external/json
+	url = https://github.com/open-source-parsers/jsoncpp.git
+
+
+[submodule "planet-mov/utils/fmt"]
+	path = external/json
+	url = https://github.com/fmtlib/fmt.git
