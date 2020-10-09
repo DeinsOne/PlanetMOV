@@ -14,7 +14,7 @@ void PlanetMOV::update() {
     if (_playTime ) _elapsedTime += _deltaTime;
 
 
-    _camera.setOrtho(getWindowWidth()/_zoom, 0, 0, getWindowHeight()/_zoom, 0.1, 500 );
+    _camera.setOrtho(getWindowWidth()/_zoom, -getWindowWidth()/_zoom, -getWindowHeight()/_zoom, getWindowHeight()/_zoom, 0.1, 500 ); // _camera.setOrtho(getWindowWidth()/_zoom, 0, 0, getWindowHeight()/_zoom, 0.1, 500 );
     _camera.lookAt({_cameraPos.x,_cameraPos.y,0});
     _camera.setEyePoint({_cameraPos.x,_cameraPos.y,30});
 
@@ -28,6 +28,7 @@ void PlanetMOV::draw() {
 
     DrawGui();
 
+    ci::gl::drawSolidCircle({}, 1 );
 }
 
 
@@ -39,18 +40,25 @@ void PlanetMOV::keyDown(ci::app::KeyEvent event ) {
     if(event.getCode() == ci::app::KeyEvent::KEY_ESCAPE ) quit();
 }
 
-// Preparing for mouse movement
-void PlanetMOV::mouseDown(ci::app::MouseEvent event ) {
-
-}
+void PlanetMOV::mouseDown(ci::app::MouseEvent event ) { _setedPos = false; }
 
 // Movement
 void PlanetMOV::mouseDrag(ci::app::MouseEvent event ) {
+    if (event.isLeftDown() ) return;
 
+    static float sensitivity = ci::clamp((_zoom - _minZValue)/(_maxZValue - _minZValue), _minZAccelSpeed, 0.9f );
+    if (_setedPos == false ) { _latMousePos = event.getPos(); _setedPos = true; }
+    glm::vec2 delta = glm::vec2(((float)_latMousePos.x - (float)event.getPos().x)*sensitivity, ((float)_latMousePos.y - (float)event.getPos().y)*sensitivity );
+
+    _cameraPos -= delta;
+    _latMousePos = event.getPos();
 }
 
-// Add zoom
+// Camera zoom
 void PlanetMOV::mouseWheel(ci::app::MouseEvent event ) {
+    // TODO: Exponental curve
+    static float sensitivity = 0.6;
+    _zoom -= event.getWheelIncrement()/sensitivity;
 
+    _zoom = ci::clamp(_zoom, _minZValue, _maxZValue);
 }
-

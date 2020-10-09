@@ -76,6 +76,8 @@ void PlanetMOV::DrawGui() {
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,1,1,0.5) );
         ImGui::Text("%f : %s", _elapsedTime, "_elapsedTime" );
         ImGui::Text("%f : %s", _deltaTime, "_deltaTime" );
+
+        ImGui::Text("%f : %s", _zoom, "_zLevel" );
         ImGui::PopStyleColor();
     ImGui::End();
 

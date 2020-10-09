@@ -32,7 +32,12 @@ class PlanetMOV : public cinder::app::App {
     public :    // Camera params
         glm::vec2 _cameraPos = {0, 0};
         ci::CameraOrtho _camera;
-        float _zoom = 16;
+        float _zoom = 24.0;
+
+        const float _maxZValue = 64.0;
+        const float _minZValue = 18.0;
+
+        const float _minZAccelSpeed = 0.01;
 
     public :    // Time control
         bool _playTime = false;
