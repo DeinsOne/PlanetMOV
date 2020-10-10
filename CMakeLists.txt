@@ -1,13 +1,13 @@
 cmake_minimum_required( VERSION 2.8 FATAL_ERROR )
-set( CMAKE_VERBOSE_MAKEFILE ON )
+set(CMAKE_VERBOSE_MAKEFILE ON )
 
 project(PlanetMOV )
 
-get_filename_component( CINDER_PATH "$ENV{HOME}/Cinder" ABSOLUTE )
-get_filename_component( APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE )
+get_filename_component(CINDER_PATH "$ENV{HOME}/Cinder" ABSOLUTE )
+get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE )
 
 
-include( "${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake" )
+include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake" )
 
 
 set(SRC_PLANET_MOVE
@@ -15,10 +15,6 @@ set(SRC_PLANET_MOVE
 	${APP_PATH}/planet-mov/utils/jsoncpp/src/lib_json/json_reader.cpp
 	${APP_PATH}/planet-mov/utils/jsoncpp/src/lib_json/json_value.cpp
 	${APP_PATH}/planet-mov/utils/jsoncpp/src/lib_json/json_writer.cpp
-
-	${APP_PATH}/planet-mov/utils/fmt/src/format.cc
-	${APP_PATH}/planet-mov/utils/fmt/src/os.cc
-
 
 
 	${APP_PATH}/planet-mov/config/jsonConfig.cpp
@@ -29,17 +25,15 @@ set(SRC_PLANET_MOVE
 	${APP_PATH}/planet-mov/EveryTick.cpp
 	${APP_PATH}/planet-mov/AppGui.cpp
 	${APP_PATH}/planet-mov/Setup.cpp
-
 )
 set(INC_PLANET_MOVE
 	${CINDER_PATH}/include
-
 	${APP_PATH}/planet-mov
 	${APP_PATH}/planet-mov/config
 
 	# Utils
 	${APP_PATH}/planet-mov/utils/jsoncpp/include
-	${APP_PATH}/planet-mov/utils/fmt/include
+	${APP_PATH}/planet-mov/utils/Catch2/include
 )
 
 ci_make_app(

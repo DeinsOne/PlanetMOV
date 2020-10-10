@@ -21,10 +21,4 @@ void PlanetMOV::setup() {
     ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
     ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-brands-400.ttf", 12.0f, &config, ranges);
 
-
-    // Camera definitions
-    _camera.setOrtho(getWindowWidth()/_zoom, 0, 0, getWindowHeight()/_zoom, 0.1, 500 );
-    _camera.lookAt({_cameraPos.x,_cameraPos.y,0});
-    _camera.setEyePoint({_cameraPos.x,_cameraPos.y,30});
-
 }

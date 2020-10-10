@@ -56,7 +56,6 @@ void PlanetMOV::mouseDrag(ci::app::MouseEvent event ) {
 
 // Camera zoom
 void PlanetMOV::mouseWheel(ci::app::MouseEvent event ) {
-    // TODO: Exponental curve
     static float sensitivity = 0.6;
     _zoom -= event.getWheelIncrement()/sensitivity;
 
