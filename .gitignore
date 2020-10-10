@@ -1,9 +1,6 @@
+.vscode/
+build/
+
 *.log
 *.ini
 *.gch
-
-
-.vscode
-build
-
-planet-mov/utils
