@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <inttypes.h>
+#include <stdio.h>
+
+
 int            _str_find(const char* __a, const char* __b ) {
     int j = 0;
     for (int i = 0; i < strlen(__a) && j < strlen(__b); i++ ) {
@@ -98,6 +102,17 @@ int            _str_cut(char *str, int begin, int len) {
     return len;
 }
 
+
+int64_t         _str_to_int(const char *str ) {
+    int64_t i;
+    char c ;
+
+    int scanned = sscanf(str, "%" SCNd64 "%c", &i, &c);
+    if (scanned == 1) return i;
+    if (scanned > 1) { return i; }
+
+    return 0;
+}
 
 // find firest
 // int pos = -1;

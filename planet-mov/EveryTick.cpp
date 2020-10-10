@@ -28,7 +28,11 @@ void PlanetMOV::draw() {
 
     DrawGui();
 
-    ci::gl::drawSolidCircle({}, 1 );
+    for (auto planet : _planets ) {
+        ci::gl::drawSolidCircle(planet.second->_pos, planet.second->_size, planet.second->_size*12 );
+    }
+
+
 }
 
 

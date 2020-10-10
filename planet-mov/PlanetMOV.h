@@ -8,6 +8,8 @@
 #include <cstdio>
 #include <chrono>
 
+#include "PlanetSystem.h"
+
 
 class PlanetMOV : public cinder::app::App {
     private :
@@ -28,6 +30,7 @@ class PlanetMOV : public cinder::app::App {
 
         std::chrono::_V2::system_clock::time_point _nowTime = std::chrono::high_resolution_clock::now();
 
+        std::map<std::string, std::shared_ptr<Planet> >  _planets;
 
     public :    // Camera params
         glm::vec2 _cameraPos = {0, 0};
@@ -44,7 +47,6 @@ class PlanetMOV : public cinder::app::App {
 
         float _elapsedTime = 0.0;
         float _deltaTime = 0.0;
-
 
 
     public :    // Gui

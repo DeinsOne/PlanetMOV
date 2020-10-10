@@ -1,5 +1,6 @@
 cmake_minimum_required( VERSION 2.8 FATAL_ERROR )
 set(CMAKE_VERBOSE_MAKEFILE ON )
+set(CMAKE_CXX_STANDARD 17)
 
 project(PlanetMOV )
 
@@ -30,6 +31,7 @@ set(INC_PLANET_MOVE
 	${CINDER_PATH}/include
 	${APP_PATH}/planet-mov
 	${APP_PATH}/planet-mov/config
+	${APP_PATH}/planet-mov/context
 
 	# Utils
 	${APP_PATH}/planet-mov/utils/jsoncpp/include

@@ -2,6 +2,7 @@
 #define __DOT_STRING_
 
 #include <string.h>
+#include <inttypes.h>
 
 // Find __b in __a and return 0 if trua or 1
 int            _str_find(const char* __a, const char* __b );
@@ -26,6 +27,9 @@ int            _str_find_mask(const char* _f, char* _mask = "#");
 // Cut str from begin to end and write to it
 int            _str_cut(char *str, int begin, int len);
 
+
+// Return intager interpret of string
+int64_t         _str_to_int(const char *str );
 
 #endif // __DOT_STRING_
 
