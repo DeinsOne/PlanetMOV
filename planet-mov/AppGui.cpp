@@ -111,6 +111,13 @@ void PlanetMOV::DrawGui() {
 
                     ImGui::TreePop();
                 }
+
+                ImGui::Spacing();
+                if (ImGui::TreeNode("Shader") ) {
+                    ImGui::LabelText("", "%s", _planets[_selectedPlanet]->_pathToFragmentShader.c_str() );
+                    
+                    ImGui::TreePop();
+                }
             }
 
 
