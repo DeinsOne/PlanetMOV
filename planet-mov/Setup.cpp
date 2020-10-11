@@ -21,9 +21,6 @@ void PlanetMOV::setup() {
     ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
 
 
-    // Init planets
-    // _planets["Earth"] = std::make_shared<Planet>(glm::vec2(10,0), 1.4f );
-
 
     _planets["Sun"] = std::make_shared<Planet>(glm::vec2(0,0), 3.0f );
     _planets["Sun"]->_shader = ci::gl::GlslProg::create(
@@ -31,8 +28,9 @@ void PlanetMOV::setup() {
         ci::loadFile("assets/shaders/glsl/sunShader.fs.glsl" )
     );
     
-    _planets["Sun"]->_pathToFragmentShader = "assets/shaders/glsl/default.fs.glsl";
-    _planets["Sun"]->_fragmentShaderText = "...";
-
+    _planets["Sun"]->_pathToFragmentShader = "assets/shaders/glsl/sunShader.fs.glsl";
+    std::ifstream ifs(_planets["Sun"]->_pathToFragmentShader );
+    _planets["Sun"]->_fragmentShaderText = std::string((std::istreambuf_iterator<char>(ifs) ), (std::istreambuf_iterator<char>()) );
+    ifs.close();
 
 }
