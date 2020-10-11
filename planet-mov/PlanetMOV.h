@@ -35,8 +35,6 @@ class PlanetMOV : public cinder::app::App {
         int _colorOfBorder = 0xff463c;
         float _radiusOfBorder = 0.2;
 
-        // ci::gl::GlslProgRef _shader;
-
     public :    // Camera params
         glm::vec2 _cameraPos = {0, 0};
         ci::CameraOrtho _camera;

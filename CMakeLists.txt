@@ -26,6 +26,8 @@ set(SRC_PLANET_MOVE
 	${APP_PATH}/planet-mov/EveryTick.cpp
 	${APP_PATH}/planet-mov/AppGui.cpp
 	${APP_PATH}/planet-mov/Setup.cpp
+
+	${APP_PATH}/planet-mov/context/PlanetSystem.cpp
 )
 set(INC_PLANET_MOVE
 	${CINDER_PATH}/include

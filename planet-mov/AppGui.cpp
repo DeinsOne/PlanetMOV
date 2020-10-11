@@ -92,7 +92,7 @@ void PlanetMOV::DrawGui() {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0 );
         ImGui::SetNextWindowSize(ImVec2(275, ci::app::getWindow()->getSize().y) );
         ImGui::SetNextWindowPos(ImVec2(0, 0 ) );
-        ImGui::Begin("Tools", nullptr, wnFlags );
+        ImGui::Begin("Tools", nullptr, wnFlags | ImGuiWindowFlags_NoScrollbar );
             _selectedPlanet.empty() ? ImGui::TextColored(ImVec4(1,1,1,0.4), "No selected planet") : ImGui::Text("%s", _selectedPlanet.c_str() ); 
 
 
@@ -114,8 +114,8 @@ void PlanetMOV::DrawGui() {
 
                 ImGui::Spacing();
                 if (ImGui::TreeNode("Shader") ) {
-                    ImGui::LabelText("", "%s", _planets[_selectedPlanet]->_pathToFragmentShader.c_str() );
-                    
+                    ImGui::LabelText("Path", "%s", _planets[_selectedPlanet]->_pathToFragmentShader.c_str() );
+
                     ImGui::TreePop();
                 }
             }

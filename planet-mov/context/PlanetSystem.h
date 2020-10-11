@@ -4,7 +4,6 @@
 #include <string>
 #include <cinder/gl/GlslProg.h>
 
-// const std::string _PLANET_MOV_VERTEX_SHADER_DEF = "";
 
 
 class Planet {
@@ -12,11 +11,15 @@ class Planet {
         glm::vec2               _pos;
         float                   _size;
 
-        Planet(glm::vec2 pos, float size) { _pos = pos; _size = size; }
+        Planet(glm::vec2 pos, float size);
 
         std::string             _pathToFragmentShader;
         std::string             _fragmentShaderText;
         ci::gl::GlslProgRef     _shader;
+
+        void BindShader(float elapsedTime, float deltaTime );
+        
+
 };
 
 
