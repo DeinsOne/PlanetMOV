@@ -6,13 +6,15 @@
             "size": 7.0,
             "pos" : [ 0, 0 ],
 
-            "fShader" : "assets/shaders/glsl/sunShader.fs.glsl"
+            "fShader" : "assets/shaders/sunShader.fs.glsl"
         },
 
         {
             "label": "Earth",
             "radius" : 2.4, 
-            "pos" : [ 26, 0 ]
+            "pos" : [ 26, 0 ],
+
+            "fShader" : "assets/shaders/earthShader.fs.glsl"
         }
 
     

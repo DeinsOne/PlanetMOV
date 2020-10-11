@@ -92,7 +92,6 @@ void PlanetMOV::DrawGui() {
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,1,1,0.5) );
         ImGui::Text("%f : %s", _elapsedTime, "_elapsedTime" );
         ImGui::Text("%f : %s", _deltaTime, "_deltaTime" );
-        ImGui::Text("%f : %s", _zoom, "_zLevel" );
         ImGui::PopStyleColor();
     ImGui::End();
 
@@ -107,13 +106,10 @@ void PlanetMOV::DrawGui() {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0 );
         ImGui::SetNextWindowSize(ImVec2(275, ci::app::getWindow()->getSize().y) );
         ImGui::SetNextWindowPos(ImVec2(0, 0 ) );
-        ImGui::Begin("Tools", nullptr, wnFlags | ImGuiWindowFlags_NoScrollbar );
+        ImGui::Begin("Tools", nullptr, wnFlags );
             _selectedPlanet.empty() ? ImGui::TextColored(ImVec4(1,1,1,0.4), "No selected planet") : ImGui::Text("%s", _selectedPlanet.c_str() ); 
 
 
-            // Close tools window button
-            ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowSize().x-26, 6 ) );
-            if (customButton("", {20, 20}, {1,1,1}, true) ) { _toolsOpen = false; }
             ImGui::Separator(); ImGui::Spacing();
 
             // Tool
@@ -149,6 +145,10 @@ void PlanetMOV::DrawGui() {
 
             ImGui::SetCursorScreenPos(ImVec2((ImGui::GetWindowSize().x/2) - (ImGui::CalcTextSize("vrs:x.x.x").x/2), ImGui::GetWindowSize().y - ImGui::GetFrameHeight()) );
             ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:prealpha" );
+
+            // Close tools window button
+            ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowSize().x-26, 6 ) );
+            if (customButton("", {20, 20}, {1,1,1}, true) ) { _toolsOpen = false; }
         ImGui::End();
         ImGui::PopStyleVar(2);
     }

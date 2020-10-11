@@ -18,7 +18,7 @@ class Planet {
         ci::gl::GlslProgRef     _shader;
 
         void BindShader(float elapsedTime, float deltaTime );
-        
+
 
 };
 

@@ -35,8 +35,8 @@ void PlanetMOV::setup() {
             std::string _id = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_ID, "" );
             float       _size = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Radius, 0.0f );
             glm::vec2   _pos = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Pos, glm::vec2(0.0f, 0.0f) );
-            std::string _vShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_VShader, "assets/shaders/glsl/default.vs.glsl" );
-            std::string _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/glsl/default.fs.glsl" );
+            std::string _vShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_VShader, "assets/shaders/default.vs.glsl" );
+            std::string _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/default.fs.glsl" );
 
             _planets[_id] = std::make_shared<Planet>(_pos, _size );
             _planets[_id]->_shader = ci::gl::GlslProg::create(
