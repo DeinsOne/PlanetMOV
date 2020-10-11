@@ -5,14 +5,12 @@
 #include <vector>
 
 
-enum _Labels_ {
+enum Labels_ {
     Labels_ID = 0,
     Labels_Radius,
-    Labels_Color,
 
     Labels_Pos,
 
-    Labels_Script,
     Labels_VShader,
     Labels_FShader
 
@@ -21,17 +19,13 @@ enum _Labels_ {
 static std::vector<std::pair<const char*, const char*> > Labels = std::initializer_list<std::pair<const char*, const char*> > {
     { "label", "id" },                              // _Labels_ID
 
-    { "radius", "" },                               // _Labels_Radius
-
-    { "_Labels_Color", "" },                        // _Labels_Color
+    { "radius", "size" },                           // _Labels_Radius
 
     { "position", "pos" },                          // _Labels_Pos
 
-    { "scriptExecutable", "script" },               // _Labels_Script
+    { "vertexShader", "vShader" },                  // _Labels_VShader
 
-    { "scriptVertexShader", "vShader" },            // _Labels_VShader
-
-    { "scriptFragmentShader", "fShader" }           // _Labels_FShader
+    { "fragmentShader", "fShader" }                 // _Labels_FShader
 
 };
 

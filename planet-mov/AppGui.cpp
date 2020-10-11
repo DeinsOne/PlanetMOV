@@ -132,7 +132,7 @@ void PlanetMOV::DrawGui() {
                     ImGui::Text("%s", _planets[_selectedPlanet]->_pathToFragmentShader.c_str() );
                     ImGui::Spacing();
 
-                    if (ImGui::TreeNode("Text") ) {
+                    if (ImGui::TreeNode("Fragment shader") ) {
                         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
                         std::vector<std::string> lines = split(_planets[_selectedPlanet]->_fragmentShaderText, "\n" );
                         for (int i = 0; i < lines.size(); i++ ) {
