@@ -39,6 +39,21 @@ bool customButton(const char* label, ImVec2 size, glm::vec3 textColor = {1,1,1},
 }
 
 
+std::vector<std::string> split(std::string s, std::string delimiter) {
+    size_t pos_start = 0, pos_end, delim_len = delimiter.length();
+    std::string token;
+    std::vector<std::string> res;
+
+    while ((pos_end = s.find (delimiter, pos_start)) != std::string::npos) {
+        token = s.substr (pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        res.push_back (token);
+    }
+
+    res.push_back (s.substr (pos_start));
+    return res;
+}
+
 
 void PlanetMOV::DrawGui() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
@@ -92,7 +107,7 @@ void PlanetMOV::DrawGui() {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0 );
         ImGui::SetNextWindowSize(ImVec2(275, ci::app::getWindow()->getSize().y) );
         ImGui::SetNextWindowPos(ImVec2(0, 0 ) );
-        ImGui::Begin("Tools", nullptr, wnFlags );
+        ImGui::Begin("Tools", nullptr, wnFlags | ImGuiWindowFlags_NoScrollbar );
             _selectedPlanet.empty() ? ImGui::TextColored(ImVec4(1,1,1,0.4), "No selected planet") : ImGui::Text("%s", _selectedPlanet.c_str() ); 
 
 
@@ -108,6 +123,24 @@ void PlanetMOV::DrawGui() {
                     ImGui::Spacing();
                     ImGui::LabelText("Radius", "%.3f", _planets[_selectedPlanet]->_size );
                     ImGui::LabelText("Pos", "%.2f | %.2f", _planets[_selectedPlanet]->_pos.x, _planets[_selectedPlanet]->_pos.y );
+
+                    ImGui::TreePop();
+                }
+
+                ImGui::Spacing();
+                if (ImGui::TreeNode("Shader") ) {
+                    ImGui::Text("%s", _planets[_selectedPlanet]->_pathToFragmentShader.c_str() );
+                    ImGui::Spacing();
+
+                    if (ImGui::TreeNode("Text") ) {
+                        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
+                        std::vector<std::string> lines = split(_planets[_selectedPlanet]->_fragmentShaderText, "\n" );
+                        for (int i = 0; i < lines.size(); i++ ) {
+                            ImGui::Text("%s", lines.at(i).c_str() );
+                        }
+                        ImGui::PopStyleVar();
+                        ImGui::TreePop();
+                    }
 
                     ImGui::TreePop();
                 }

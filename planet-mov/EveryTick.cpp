@@ -30,11 +30,13 @@ void PlanetMOV::draw() {
 
     for (auto planet : _planets ) {
         if (_selectedPlanet == planet.first ) {
+            ci::gl::getStockShader(ci::gl::ShaderDef().color() )->bind();
             ci::gl::color(ci::Color::hex(_colorOfBorder ) );
             ci::gl::drawSolidCircle(planet.second->_pos, planet.second->_size + _radiusOfBorder, planet.second->_size*12 );
         }
 
-        ci::gl::color(ci::Color::hex(0xeeeeee) );
+        if (planet.second->_shader) planet.second->BindShader(_elapsedTime, _deltaTime );
+        else ci::gl::color(ci::Color::hex(0xeeeeee) );
         ci::gl::drawSolidCircle(planet.second->_pos, planet.second->_size, planet.second->_size*12 );
     }
 
