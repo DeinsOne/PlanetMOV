@@ -19,7 +19,7 @@ void PlanetMOV::setup() {
     static ImWchar ranges[] = { 0xf000, 0xf3ff, 0 };
     ImFontConfig config; config.MergeMode = true;
     ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
-    ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-brands-400.ttf", 12.0f, &config, ranges);
+    // ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-brands-400.ttf", 12.0f, &config, ranges);
 
 
 

@@ -61,7 +61,7 @@ void PlanetMOV::mouseDown(ci::app::MouseEvent event ) {
 
 
     glm::vec3 _rayOrigin = _ray.getOrigin();
-    printf("Origin  x : %f | y : %f\n", _rayOrigin.x, _rayOrigin.y );
+    // printf("Origin  x : %f | y : %f\n", _rayOrigin.x, _rayOrigin.y );
     for (auto planet : _planets ) {
         if (glm::distance2(planet.second->_pos, glm::vec2(_rayOrigin.x, _rayOrigin.y) ) <= (2*planet.second->_size) ) {
             _selectedPlanet = planet.first;

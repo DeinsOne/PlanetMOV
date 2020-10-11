@@ -55,6 +55,8 @@ class PlanetMOV : public cinder::app::App {
     public :    // Gui
         void DrawGui();
 
+        bool _toolsOpen = false;
+
 };
 
 
