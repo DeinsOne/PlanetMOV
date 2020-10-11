@@ -31,6 +31,9 @@ class PlanetMOV : public cinder::app::App {
         std::chrono::_V2::system_clock::time_point _nowTime = std::chrono::high_resolution_clock::now();
 
         std::map<std::string, std::shared_ptr<Planet> >  _planets;
+        std::string _selectedPlanet = "Sun";
+        int _colorOfBorder = 0xff463c;
+        float _radiusOfBorder = 0.2;
 
     public :    // Camera params
         glm::vec2 _cameraPos = {0, 0};

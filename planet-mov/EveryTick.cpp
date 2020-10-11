@@ -29,6 +29,12 @@ void PlanetMOV::draw() {
     DrawGui();
 
     for (auto planet : _planets ) {
+        if (_selectedPlanet == planet.first ) {
+            ci::gl::color(ci::Color::hex(_colorOfBorder ) );
+            ci::gl::drawSolidCircle(planet.second->_pos, planet.second->_size + _radiusOfBorder, planet.second->_size*12 );
+        }
+
+        ci::gl::color(ci::Color::hex(0xeeeeee) );
         ci::gl::drawSolidCircle(planet.second->_pos, planet.second->_size, planet.second->_size*12 );
     }
 
@@ -44,7 +50,28 @@ void PlanetMOV::keyDown(ci::app::KeyEvent event ) {
     if(event.getCode() == ci::app::KeyEvent::KEY_ESCAPE ) quit();
 }
 
-void PlanetMOV::mouseDown(ci::app::MouseEvent event ) { _setedPos = false; }
+void PlanetMOV::mouseDown(ci::app::MouseEvent event ) {
+    _setedPos = false;
+
+    // FIXME: Update selected planet
+    ci::Ray _ray = _camera.generateRay(event.getPos(), ci::app::getWindow()->getSize() );
+    _ray.transform(
+        glm::translate(glm::mat4(1.0), _camera.getEyePoint() )
+    );
+
+
+    glm::vec3 _rayOrigin = _ray.getOrigin();
+    printf("Origin  x : %f | y : %f\n", _rayOrigin.x, _rayOrigin.y );
+    for (auto planet : _planets ) {
+        if (glm::distance2(planet.second->_pos, glm::vec2(_rayOrigin.x, _rayOrigin.y) ) <= (2*planet.second->_size) ) {
+            _selectedPlanet = planet.first;
+            return;
+        }
+    }
+    _selectedPlanet = "";
+
+
+}
 
 // Movement
 void PlanetMOV::mouseDrag(ci::app::MouseEvent event ) {

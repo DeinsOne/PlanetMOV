@@ -23,6 +23,7 @@ void PlanetMOV::setup() {
 
 
 
-    _planets["Sun"] = std::make_shared<Planet>(glm::vec2(0,0), 2.0f );
+    _planets["Sun"] = std::make_shared<Planet>(glm::vec2(0,0), 3.0f );
+    _planets["Earth"] = std::make_shared<Planet>(glm::vec2(10,0), 1.4f );
 
 }
