@@ -18,6 +18,9 @@ void PlanetMOV::update() {
     _camera.lookAt({_cameraPos.x,_cameraPos.y,0});
     _camera.setEyePoint({_cameraPos.x,_cameraPos.y,30});
 
+
+    _planetPicker.reset();
+    _planetPicker = ci::gl::Fbo::create(ci::app::getWindow()->getSize().x, ci::app::getWindow()->getSize().y );
 }
 
 
@@ -43,6 +46,25 @@ void PlanetMOV::draw() {
     }
 
 
+
+
+    // Draw separeate fbo to give possibility planet picking 
+    _planetPicker->bindFramebuffer();
+        ci::gl::clear(ci::Color::hex(0x0000));
+        ci::gl::setMatrices(_camera );
+
+        auto planet = _planets.begin();
+        for (int i = 0; i < _planets.size(); i++ ) {
+            ci::gl::setModelMatrix(ci::translate(glm::vec3(planet->second->_pos, 0.0)) );
+
+            ci::gl::getStockShader(ci::gl::ShaderDef().color() )->bind();
+            ci::gl::color(0, ((float)(i+1))/((float)_planets.size()) ,0,1);
+            ci::gl::drawSolidCircle({}, planet->second->_size, planet->second->_size*12 );
+            planet++;
+        }
+
+    _planetPicker->unbindFramebuffer();
+
 }
 
 
@@ -57,23 +79,25 @@ void PlanetMOV::keyDown(ci::app::KeyEvent event ) {
 void PlanetMOV::mouseDown(ci::app::MouseEvent event ) {
     _setedPos = false;
 
-    // FIXME: Update selected planet
-    ci::Ray _ray = _camera.generateRay(event.getPos(), ci::app::getWindow()->getSize() );
-    _ray.transform(
-        glm::translate(glm::mat4(1.0), _camera.getEyePoint() )
-    );
 
-
-    glm::vec3 _rayOrigin = _ray.getOrigin();
-    // printf("Origin  x : %f | y : %f\n", _rayOrigin.x, _rayOrigin.y );
-    for (auto planet : _planets ) {
-        if (glm::distance2(planet.second->_pos, glm::vec2(_rayOrigin.x, _rayOrigin.y) ) <= (2*planet.second->_size) ) {
-            _selectedPlanet = planet.first;
-            return;
+    if (event.isLeft() ) {
+        ci::Surface32f pixel = _planetPicker->readPixels32f(ci::Area(0,0, _planetPicker->getSize().x, _planetPicker->getSize().y ), GL_COLOR_ATTACHMENT0 );
+    
+        if (pixel.getPixel(event.getPos() ).a != 0 ) {
+            float _greenPx = pixel.getPixel(event.getPos() ).g;
+    
+            auto planet = _planets.begin();
+            for (int i = 0; i < _planets.size(); i++ ) {
+                float _objCl = ((float)(i+1))/((float)_planets.size());
+    
+                if (fabs(_objCl - _greenPx) <= 0.01 )
+                    _selectedPlanet = planet->first;
+    
+                planet++;
+            }
         }
+        else _selectedPlanet = "";
     }
-    _selectedPlanet = "";
-
 
 }
 

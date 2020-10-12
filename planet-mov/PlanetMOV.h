@@ -4,6 +4,7 @@
 #include "cinder/Cinder.h"
 #include "cinder/app/App.h"
 #include "cinder/Camera.h"
+#include "cinder/gl/Fbo.h"
 
 #include <cstdio>
 #include <chrono>
@@ -34,6 +35,8 @@ class PlanetMOV : public cinder::app::App {
         std::string _selectedPlanet;
         int _colorOfBorder = 0xff463c;
         float _radiusOfBorder = 0.2;
+
+        ci::gl::FboRef _planetPicker;
 
     public :    // Camera params
         glm::vec2 _cameraPos = {0, 0};
