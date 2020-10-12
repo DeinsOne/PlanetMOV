@@ -81,11 +81,12 @@ void PlanetMOV::mouseDown(ci::app::MouseEvent event ) {
 void PlanetMOV::mouseDrag(ci::app::MouseEvent event ) {
     if (event.isLeftDown() ) return;
 
-    static float sensitivity = ci::clamp((_zoom - _minZValue)/(_maxZValue - _minZValue), _minZAccelSpeed, 0.9f );
+    static const float _as = 400; // Index of sensitivity
+    static float sensitivity = (1.0f - ci::clamp((_zoom - _minZValue)/(_maxZValue - _minZValue), _minZAccelSpeed, 0.9f )) * _deltaTime * _as;
     if (_setedPos == false ) { _latMousePos = event.getPos(); _setedPos = true; }
     glm::vec2 delta = glm::vec2(((float)_latMousePos.x - (float)event.getPos().x)*sensitivity, ((float)_latMousePos.y - (float)event.getPos().y)*sensitivity );
 
-    _cameraPos -= delta;
+    _cameraPos -= delta*_deltaTime;
     _latMousePos = event.getPos();
 }
 
