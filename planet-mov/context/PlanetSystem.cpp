@@ -20,10 +20,10 @@ void Planet::BindShader(float elapsedTime, float deltaTime)
     _shader->uniform("planetRadius", _size);
 }
 
-void PlanetSystem::loadPlanetsConfig()
+void PlanetSystem::loadPlanetsConfig(std::string _file)
 {
     Json::Value _planetsConfig;
-    std::ifstream configFile("assets/config/planet-mov.json");
+    std::ifstream configFile(_file.c_str() );
     configFile >> _planetsConfig;
     configFile.close();
 

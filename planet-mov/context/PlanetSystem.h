@@ -36,7 +36,7 @@ class PlanetSystem {
     public :
         static PlanetSystem& Get() { static PlanetSystem pl; return pl; }
 
-        void loadPlanetsConfig();
+        void loadPlanetsConfig(std::string _file);
 
         void update();
         void draw();
