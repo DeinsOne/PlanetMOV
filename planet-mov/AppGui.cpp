@@ -66,15 +66,15 @@ void PlanetMOV::DrawGui() {
     ImGui::Begin("ToolsBar:1", nullptr, wnFlags );
         // Resume button
         ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowPos().x + 6, ImGui::GetWindowPos().y + 6) );
-        if (_playTime == true) { if (customButton("", {20, 20}, {1,0,0} )) _playTime = false; }
+        if (TimeControl::Get()._play == true) { if (customButton("", {20, 20}, {1,0,0} )) TimeControl::Get()._play = false; }
         else if (customButton("", {20, 20}, {0,1,0} )) { 
-            _nowTime = std::chrono::high_resolution_clock::now();
-            _playTime = true;
+            TimeControl::Get()._time = std::chrono::high_resolution_clock::now();
+            TimeControl::Get()._play = true;
         }
 
         // Restart button
         ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowPos().x + 38, ImGui::GetWindowPos().y + 6) );
-        if (customButton("", {20, 20} )) { _elapsedTime = 0.0; }
+        if (customButton("", {20, 20} )) { TimeControl::Get()._elapsedTime = 0.0; }
 
 
         // Terminal button
@@ -90,8 +90,8 @@ void PlanetMOV::DrawGui() {
     ImGui::SetNextWindowPos(ImVec2(getWindowSize().x - 172 - 96 - 3, 2 ) );
     ImGui::Begin("DebugWindow", nullptr, wnFlags | ImGuiWindowFlags_NoBackground );
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,1,1,0.5) );
-        ImGui::Text("%f : %s", _elapsedTime, "_elapsedTime" );
-        ImGui::Text("%f : %s", _deltaTime, "_deltaTime" );
+        ImGui::Text("%f : %s", TimeControl::Get()._elapsedTime, "_elapsedTime" );
+        ImGui::Text("%f : %s", TimeControl::Get().getDeltaTime(), "_deltaTime" );
         ImGui::PopStyleColor();
     ImGui::End();
 
@@ -107,30 +107,30 @@ void PlanetMOV::DrawGui() {
         ImGui::SetNextWindowSize(ImVec2(275, ci::app::getWindow()->getSize().y) );
         ImGui::SetNextWindowPos(ImVec2(0, 0 ) );
         ImGui::Begin("Tools", nullptr, wnFlags );
-            _selectedPlanet.empty() ? ImGui::TextColored(ImVec4(1,1,1,0.4), "No selected planet") : ImGui::Text("%s", _selectedPlanet.c_str() ); 
+            PlanetSystem::Get()._selectedPlanet.empty() ? ImGui::TextColored(ImVec4(1,1,1,0.4), "No selected planet") : ImGui::Text("%s", PlanetSystem::Get()._selectedPlanet.c_str() ); 
 
 
             ImGui::Separator(); ImGui::Spacing();
 
             // Tool
-            if (!_selectedPlanet.empty() ) {
+            if (!PlanetSystem::Get()._selectedPlanet.empty() ) {
                 if (ImGui::TreeNode("Planet") ) {
-                    ImGui::LabelText("Name", "%s", _selectedPlanet.c_str() );
+                    ImGui::LabelText("Name", "%s", PlanetSystem::Get()._selectedPlanet.c_str() );
                     ImGui::Spacing();
-                    ImGui::LabelText("Radius", "%.3f", _planets[_selectedPlanet]->_size );
-                    ImGui::LabelText("Pos", "%.2f | %.2f", _planets[_selectedPlanet]->_pos.x, _planets[_selectedPlanet]->_pos.y );
+                    ImGui::LabelText("Radius", "%.3f", PlanetSystem::Get().getSelectedPlanet()->_size );
+                    ImGui::LabelText("Pos", "%.2f | %.2f", PlanetSystem::Get().getSelectedPlanet()->_pos.x, PlanetSystem::Get().getSelectedPlanet()->_pos.y );
 
                     ImGui::TreePop();
                 }
 
                 ImGui::Spacing();
                 if (ImGui::TreeNode("Shader") ) {
-                    ImGui::Text("%s", _planets[_selectedPlanet]->_pathToFragmentShader.c_str() );
+                    ImGui::Text("%s", PlanetSystem::Get().getSelectedPlanet()->_pathToFragmentShader.c_str() );
                     ImGui::Spacing();
 
                     if (ImGui::TreeNode("Fragment shader") ) {
                         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
-                        std::vector<std::string> lines = split(_planets[_selectedPlanet]->_fragmentShaderText, "\n" );
+                        std::vector<std::string> lines = split(PlanetSystem::Get().getSelectedPlanet()->_fragmentShaderText, "\n" );
                         for (int i = 0; i < lines.size(); i++ ) {
                             ImGui::Text("%s", lines.at(i).c_str() );
                         }

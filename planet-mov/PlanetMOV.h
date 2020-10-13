@@ -9,60 +9,30 @@
 #include <cstdio>
 #include <chrono>
 
+#include "TimeControl.h"
+#include "CameraControl.h"
 #include "PlanetSystem.h"
 
 
-class PlanetMOV : public cinder::app::App {
-    private :
-        void setup() override;
+class PlanetMOV : public cinder::app::App
+{
+private:
+    void setup() override;
+    void cleanup() override;
 
-        void keyDown(ci::app::KeyEvent event) override;
-        void mouseDown(ci::app::MouseEvent event) override;
-        void mouseDrag(ci::app::MouseEvent event) override;
-        void mouseWheel(ci::app::MouseEvent event) override;
+    void keyDown(ci::app::KeyEvent event) override;
+    void mouseDown(ci::app::MouseEvent event) override;
+    void mouseDrag(ci::app::MouseEvent event) override;
+    void mouseWheel(ci::app::MouseEvent event) override;
 
-        void update() override;
-        void draw() override;
-        void drawUI();
+    void update() override;
+    void draw() override;
+    void drawUI();
 
-    private :   // Hard logic
-        glm::ivec2 _latMousePos;
-        bool _setedPos = false;
+public: // Gui
+    void DrawGui();
 
-        std::chrono::_V2::system_clock::time_point _nowTime = std::chrono::high_resolution_clock::now();
-
-        std::map<std::string, std::shared_ptr<Planet> >  _planets;
-        std::string _selectedPlanet;
-        int _colorOfBorder = 0xff463c;
-        float _radiusOfBorder = 0.2;
-
-        ci::gl::FboRef _planetPicker;
-
-    public :    // Camera params
-        glm::vec2 _cameraPos = {0, 0};
-        ci::CameraOrtho _camera;
-        float _zoom = 24.0;
-
-        const float _maxZValue = 64.0;
-        const float _minZValue = 18.0;
-
-        const float _minZAccelSpeed = 0.01;
-
-    public :    // Time control
-        bool _playTime = false;
-
-        float _elapsedTime = 0.0;
-        float _deltaTime = 0.0;
-
-
-    public :    // Gui
-        void DrawGui();
-
-        bool _toolsOpen = false;
-
+    bool _toolsOpen = false;
 };
-
-
-
 
 #endif // _PLANET_MOV_H

@@ -28,6 +28,7 @@ set(SRC_PLANET_MOVE
 	${APP_PATH}/planet-mov/Setup.cpp
 
 	${APP_PATH}/planet-mov/context/PlanetSystem.cpp
+	${APP_PATH}/planet-mov/CameraControl.cpp
 )
 set(INC_PLANET_MOVE
 	${CINDER_PATH}/include
