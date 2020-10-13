@@ -4,6 +4,10 @@
 
 #include "cinder/Display.h"
 
+void PlanetMOV::cleanup() {
+    PlanetSystem::Get().destroy();
+}
+
 static void __preSettingUp(ci::app::App::Settings* settings ) {
     settings->setWindowSize(glm::vec2(1060, 520) );
     settings->setFrameRate(60.0f );
