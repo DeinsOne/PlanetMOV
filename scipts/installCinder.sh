@@ -16,9 +16,6 @@ installCinder() {
         mkdir -p $CINDER_BUILD_FOLDER
         cd $CINDER_BUILD_FOLDER
         cmake ../../ -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCINDER_TARGET_GL=$GL_TARGET
-        
-        cmake $CINDER_BUILD_FOLDER../../ install
-
         make -j4
     fi
 
