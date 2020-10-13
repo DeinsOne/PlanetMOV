@@ -1,18 +1,14 @@
 # PlanetMOV
 
-* * *
+PlanetMOV is a lightweight solar system emulator that uses Lua scripts and different shaders instead of control components. Main purpose of project is getting know how to work with Cinder library(Render process and function set), Lua binder, shader languages and program architecture.
 
-Main purpose of PlanetMOV project is getting know how to work with Cinder library(Render process and function set), Lua binder, shader languages and program architecture.
-
-Currently supports only Linux
+Currently supports only Linux.
 
 ![](assets/Screenshot1.png)
 
 
 
 ## Futures
-
-* * *
 
 - [x] Linux build system
 - [x] Planets config file
@@ -33,8 +29,6 @@ More information can be found on [PlanetMOV Trello](https://trello.com/b/55gNFNt
 
 ## Dependencies
 
-* * *
-
 This project uses:
 - [cinder/Cinder](https://github.com/cinder/Cinder.git)
 - [flingengine/Catch2](https://github.com/flingengine/Catch2.git)
@@ -43,8 +37,6 @@ This project uses:
 
 
 ## Building
-
-* * *
 
 Clone the project & submodules:
 
@@ -81,3 +73,9 @@ __Note:__ You can use building flags to specify building behavior. All flags det
 ```
 ./build.sh -buildtype="Release/Debug" -gltarget="ogl/es2"
 ```
+
+
+
+## Licence
+
+PlanetMOV is licensed under MIT license. See [LICENSE](./LICENSE) for more details.
