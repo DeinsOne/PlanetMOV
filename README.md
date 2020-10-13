@@ -1,5 +1,8 @@
 # PlanetMOV
 
+![GitHub repo size](https://img.shields.io/github/languages/code-size/DeinsOne/PlanetMOV?style=flat-square&color=red)
+![Licence](https://img.shields.io/github/license/DeinsOne/PlanetMOV?style=flat-square&color=red)
+
 PlanetMOV is a lightweight solar system emulator that uses Lua scripts and different shaders instead of control components. Main purpose of project is getting know how to work with Cinder library(Render process and function set), Lua binder, shader languages and program architecture.
 
 Currently supports only Linux.
