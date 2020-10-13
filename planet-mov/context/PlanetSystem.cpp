@@ -12,4 +12,6 @@ void Planet::BindShader(float elapsedTime, float deltaTime ) {
     _shader->uniform("elapsedTime", elapsedTime );
     _shader->uniform("deltaTime", deltaTime );
 
+    _shader->uniform("planetRadius", _size );
+
 }
