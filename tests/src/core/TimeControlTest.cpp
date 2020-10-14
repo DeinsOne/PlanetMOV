@@ -1,12 +1,13 @@
- 
-#define CATCH_CONFIG_MAIN
+#ifndef INTERNAL_TESTS
+ #define CATCH_CONFIG_MAIN
+#endif // INTERNAL_TEST
 #include "catch2/catch.hpp"
 
 #include "TimeControl.h"
 
 #include <thread>
 
-TEST_CASE("Time control tests", "[TimeControl]" ) {
+TEST_CASE("Time control tests", "[core]" ) {
     TimeControl::Get().initTimeControl();
     TimeControl::Get()._play = true;
     float _oldTime = 0.0;

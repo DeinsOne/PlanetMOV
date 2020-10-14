@@ -1,0 +1,13 @@
+{
+  "planets": [
+    {
+      "label": "Sun",
+      "size": 7.0
+    },
+    {
+      "label": "Earth",
+      "radius": 2.4,
+      "pos": [26, 0]
+    }
+  ]
+}

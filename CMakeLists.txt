@@ -11,13 +11,15 @@ get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE )
 include("${CINDER_PATH}/proj/cmake/modules/cinderMakeApp.cmake" )
 
 
-set(SRC_PLANET_MOVE
-	# Utils
+add_library(jsnocpp SHARED
 	${APP_PATH}/planet-mov/utils/jsoncpp/src/lib_json/json_reader.cpp
 	${APP_PATH}/planet-mov/utils/jsoncpp/src/lib_json/json_value.cpp
 	${APP_PATH}/planet-mov/utils/jsoncpp/src/lib_json/json_writer.cpp
+)
+target_include_directories(jsnocpp PRIVATE ${APP_PATH}/planet-mov/utils/jsoncpp/include )
 
 
+set(SRC_PLANET_MOVE
 	${APP_PATH}/planet-mov/config/jsonConfig.cpp
 	${APP_PATH}/planet-mov/config/stringFunctions.cpp
 
@@ -46,5 +48,6 @@ ci_make_app(
 	CINDER_PATH ${CINDER_PATH}
 	SOURCES     ${SRC_PLANET_MOVE}
 	INCLUDES    ${INC_PLANET_MOVE}
+	LIBRARIES	${jsnocpp}
 	ASSETS_PATH	"assets"
 )
