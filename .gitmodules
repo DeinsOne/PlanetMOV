@@ -1,8 +1,8 @@
-[submodule "planet-mov/utils/Catch2"]
-	path = external/Catch2
+[submodule "Catch2"]
+	path = planet-mov/utils/Catch2
 	url = https://github.com/flingengine/Catch2.git
 
 
-[submodule "planet-mov/utils/jsoncpp"]
-	path = external/json
+[submodule "jsoncpp"]
+	path = planet-mov/utils/jsoncpp
 	url = https://github.com/open-source-parsers/jsoncpp.git
