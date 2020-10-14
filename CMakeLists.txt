@@ -2,7 +2,7 @@ cmake_minimum_required( VERSION 2.8 FATAL_ERROR )
 # set(CMAKE_VERBOSE_MAKEFILE ON )
 set(CMAKE_CXX_STANDARD 17)
 
-project(PlanetMOV )
+project(PlanetMOV VERSION 0.0.1 )
 
 get_filename_component(CINDER_PATH "$ENV{HOME}/Cinder" ABSOLUTE )
 get_filename_component(APP_PATH "${CMAKE_CURRENT_SOURCE_DIR}" ABSOLUTE )

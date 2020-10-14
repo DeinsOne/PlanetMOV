@@ -5,5 +5,6 @@
 #include "catch2/catch.hpp"
 
 #define INTERNAL_TESTS
+#include "core/JsonConfigTest.cpp"
 #include "core/TimeControlTest.cpp"
 
