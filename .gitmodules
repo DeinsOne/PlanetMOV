@@ -6,3 +6,15 @@
 [submodule "jsoncpp"]
 	path = planet-mov/utils/jsoncpp
 	url = https://github.com/open-source-parsers/jsoncpp.git
+
+
+[submodule "Lua"]
+	branch = v5.3.4
+	path = planet-mov/utils/Lua
+	url = https://github.com/lua/lua.git
+
+
+[submodule "LuaBridge"]
+	branch = 2.6
+	path = planet-mov/utils/LuaBridge
+	url = https://github.com/vinniefalco/LuaBridge.git
