@@ -14,7 +14,9 @@
             "radius" : 2.4, 
             "pos" : [ 26, 0 ],
 
-            "fShader" : "assets/shaders/earthShader.fs.glsl"
+            "fShader" : "assets/shaders/earthShader.fs.glsl",
+
+            "luaScript" : "assets/scripts/earthScript.lua"
         },
 
 

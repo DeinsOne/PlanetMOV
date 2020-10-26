@@ -7,21 +7,7 @@
 #include <cinder/app/App.h>
 #include <cinder/gl/Fbo.h>
 
-class Planet {
-    public :
-        glm::vec2               _pos;
-        float                   _size;
-
-        Planet(glm::vec2 pos, float size);
-
-        std::string             _pathToFragmentShader;
-        std::string             _fragmentShaderText;
-        ci::gl::GlslProgRef     _shader;
-
-        void BindShader(float elapsedTime, float deltaTime );
-
-
-};
+#include "Planet.h"
 
 
 class PlanetSystem {
@@ -52,6 +38,11 @@ class PlanetSystem {
         std::map<std::string, std::shared_ptr<Planet> >  _planets;
         std::string _selectedPlanet;
 
+
+    public :
+        void eventOnSetup();
+        void eventOnUpdate();
+        void eventOnRender();
 
 };
 

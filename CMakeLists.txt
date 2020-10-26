@@ -72,19 +72,23 @@ set(SRC_PLANET_MOVE
 
 	${APP_PATH}/planet-mov/context/PlanetSystem.cpp
 	${APP_PATH}/planet-mov/CameraControl.cpp
-
-	${APP_PATH}/planet-mov/utils/Lua
-	${APP_PATH}/planet-mov/utils/LuaBridge/Source
+	${APP_PATH}/planet-mov/context/Lua/LuaScript.cpp
+	${APP_PATH}/planet-mov/context/Lua/LuaContext.cpp
+	${APP_PATH}/planet-mov/context/Planet.cpp
 )
 set(INC_PLANET_MOVE
 	${CINDER_PATH}/include
 	${APP_PATH}/planet-mov
 	${APP_PATH}/planet-mov/config
 	${APP_PATH}/planet-mov/context
+	${APP_PATH}/planet-mov/context/Lua
 
 	# Utils
 	${APP_PATH}/planet-mov/utils/jsoncpp/include
 	${APP_PATH}/planet-mov/utils/Catch2/include
+
+	${APP_PATH}/planet-mov/utils/Lua
+	${APP_PATH}/planet-mov/utils/LuaBridge/Source
 )
 
 
@@ -93,6 +97,6 @@ ci_make_app(
 	CINDER_PATH ${CINDER_PATH}
 	SOURCES     ${SRC_PLANET_MOVE}
 	INCLUDES    ${INC_PLANET_MOVE}
-	LIBRARIES	${jsnocpp} ${lua}
+	LIBRARIES	${jsnocpp} lua
 	ASSETS_PATH	"assets"
 )

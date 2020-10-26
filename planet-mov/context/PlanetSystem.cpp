@@ -6,19 +6,6 @@
 #include "TimeControl.h"
 #include "CameraControl.h"
 
-Planet::Planet(glm::vec2 pos, float size) : _pos(pos), _size(size)
-{
-}
-
-void Planet::BindShader(float elapsedTime, float deltaTime)
-{
-    _shader->bind();
-
-    _shader->uniform("elapsedTime", elapsedTime);
-    _shader->uniform("deltaTime", deltaTime);
-
-    _shader->uniform("planetRadius", _size);
-}
 
 void PlanetSystem::loadPlanetsConfig(std::string _file)
 {
@@ -37,6 +24,7 @@ void PlanetSystem::loadPlanetsConfig(std::string _file)
             std::string _vShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_VShader, "assets/shaders/default.vs.glsl");
             std::string _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/default.fs.glsl");
 
+
             _planets[_id] = std::make_shared<Planet>(_pos, _size);
             _planets[_id]->_shader = ci::gl::GlslProg::create(
                 ci::loadFile(_vShader),
@@ -46,6 +34,8 @@ void PlanetSystem::loadPlanetsConfig(std::string _file)
             std::ifstream ifs(_planets[_id]->_pathToFragmentShader);
             _planets[_id]->_fragmentShaderText = std::string((std::istreambuf_iterator<char>(ifs)), (std::istreambuf_iterator<char>()));
             ifs.close();
+
+            _planets[_id]->_script.loadScript(Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "" ) );
         }
     }
 }
@@ -127,7 +117,30 @@ void PlanetSystem::destroy()
 
     for (auto it : _planets)
     {
+        it.second->_script.destroy();
         it.second->_shader.reset();
         it.second.reset();
     }
+}
+
+
+
+
+
+void PlanetSystem::eventOnSetup() {
+    for (auto i : _planets )
+        auto result = i.second->callOnSetup();
+
+}
+
+void PlanetSystem::eventOnUpdate() {
+    for (auto i : _planets )
+        auto result = i.second->callOnUpdate();
+
+}
+
+void PlanetSystem::eventOnRender() {
+    for (auto i : _planets )
+        auto result = i.second->callOnRender();
+
 }

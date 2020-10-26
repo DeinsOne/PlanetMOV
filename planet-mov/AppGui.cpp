@@ -140,6 +140,27 @@ void PlanetMOV::DrawGui() {
 
                     ImGui::TreePop();
                 }
+
+                if (!PlanetSystem::Get().getSelectedPlanet()->_script._pathToScript.empty() ) {
+                    ImGui::Spacing();
+                    if (ImGui::TreeNode("Script") ) {
+                        ImGui::Text("%s", PlanetSystem::Get().getSelectedPlanet()->_script._pathToScript.c_str() );
+                        ImGui::Spacing();
+
+
+                        if (ImGui::TreeNode("Lua script") ) {
+                            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
+                            std::vector<std::string> lines = split(PlanetSystem::Get().getSelectedPlanet()->_script._scriptText, "\n" );
+                            for (int i = 0; i < lines.size(); i++ ) {
+                                ImGui::Text("%s", lines.at(i).c_str() );
+                            }
+                            ImGui::PopStyleVar();
+                            ImGui::TreePop();
+                        }
+
+                        ImGui::TreePop();
+                    }
+                }
             }
 
 

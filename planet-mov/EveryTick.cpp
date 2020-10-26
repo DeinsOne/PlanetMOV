@@ -14,6 +14,11 @@ void PlanetMOV::update() {
     CameraControl::Get().update();
 
     PlanetSystem::Get().update();
+
+    if (TimeControl::Get()._play ) {
+        PlanetSystem::Get().eventOnUpdate();
+    }
+
 }
 
 

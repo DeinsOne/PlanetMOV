@@ -12,7 +12,9 @@ enum Labels_ {
     Labels_Pos,
 
     Labels_VShader,
-    Labels_FShader
+    Labels_FShader,
+
+    Labels_Script
 
 };
 
@@ -25,7 +27,9 @@ static std::vector<std::pair<const char*, const char*> > Labels = std::initializ
 
     { "vertexShader", "vShader" },                  // _Labels_VShader
 
-    { "fragmentShader", "fShader" }                 // _Labels_FShader
+    { "fragmentShader", "fShader" },                 // _Labels_FShader
+
+    { "script", "luaScript" }
 
 };
 
