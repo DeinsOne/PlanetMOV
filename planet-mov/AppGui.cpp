@@ -86,8 +86,10 @@ void PlanetMOV::DrawGui() {
             // CI_LOG_I("Planets config folder is : " << "assets/" << "  | open console. . ." );
             CI_LOG_I("Reloading scripts...");
 
-            for (auto i : PlanetSystem::Get()._planets )
-                i.second->_script.reloadScript();
+            for (auto i : PlanetSystem::Get()._planets ) {
+                i.second->_script.reload();
+                i.second->_script.check();
+            }
 
         }
 
@@ -135,12 +137,12 @@ void PlanetMOV::DrawGui() {
 
                 ImGui::Spacing();
                 if (ImGui::TreeNode("Shader") ) {
-                    ImGui::Text("%s", PlanetSystem::Get().getSelectedPlanet()->_pathToFragmentShader.c_str() );
+                    ImGui::Text("%s", PlanetSystem::Get().getSelectedPlanet()->_shader._pathSEntt.c_str() );
                     ImGui::Spacing();
 
                     if (ImGui::TreeNode("Fragment shader") ) {
                         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
-                        std::vector<std::string> lines = split(PlanetSystem::Get().getSelectedPlanet()->_fragmentShaderText, "\n" );
+                        std::vector<std::string> lines = split(PlanetSystem::Get().getSelectedPlanet()->_shader._textSEntt, "\n" );
                         for (int i = 0; i < lines.size(); i++ ) {
                             ImGui::Text("%s", lines.at(i).c_str() );
                         }
@@ -151,16 +153,16 @@ void PlanetMOV::DrawGui() {
                     ImGui::TreePop();
                 }
 
-                if (!PlanetSystem::Get().getSelectedPlanet()->_script._pathToScript.empty() ) {
+                if (!PlanetSystem::Get().getSelectedPlanet()->_script._textSEntt.empty() ) {
                     ImGui::Spacing();
                     if (ImGui::TreeNode("Script") ) {
-                        ImGui::Text("%s", PlanetSystem::Get().getSelectedPlanet()->_script._pathToScript.c_str() );
+                        ImGui::Text("%s", PlanetSystem::Get().getSelectedPlanet()->_script._pathSEntt.c_str() );
                         ImGui::Spacing();
 
 
                         if (ImGui::TreeNode("Lua script") ) {
                             ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
-                            std::vector<std::string> lines = split(PlanetSystem::Get().getSelectedPlanet()->_script._scriptText, "\n" );
+                            std::vector<std::string> lines = split(PlanetSystem::Get().getSelectedPlanet()->_script._textSEntt, "\n" );
                             for (int i = 0; i < lines.size(); i++ ) {
                                 ImGui::Text("%s", lines.at(i).c_str() );
                             }

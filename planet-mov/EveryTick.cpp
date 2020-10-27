@@ -30,7 +30,6 @@ void PlanetMOV::draw() {
     DrawGui();
 
 
-    PlanetSystem::Get().eventOnRender();
     PlanetSystem::Get().draw();
 
 }

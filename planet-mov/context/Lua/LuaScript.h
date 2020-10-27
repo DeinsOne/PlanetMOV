@@ -5,37 +5,24 @@ extern "C" {
     #include "lua.h"
 }
 
-#include "LuaContext.h"
+#include "ScriptableEntt.h"
 
-#include <string>
-#include <fstream>
-#include <stdexcept>
-
-class LuaScript {
-    private :
-        void initLuaState();
-
+class LuaScript : public ScriptableEntt {
     public : // Functions
         LuaScript() { }
-        LuaScript(std::string script) { loadScript(); }
+        LuaScript(std::string script) { load(script ); }
 
         ~LuaScript() { destroy(); }
+        virtual void destroy() override;
 
-        void destroy();
+
+        virtual Error load(std::string path ) override;
+
+        virtual int bind() override;
+        virtual int check() override;
 
 
-        // loads script by "_pathToScript" path. if _pathToScript is empty or refers nonexisting file LuaScript destroys all fields
-        void loadScript();
-
-        // loads script by given path
-        void loadScript(std::string path );
-
-        void reloadScript() { loadScript(); }
-
-    public : // Variables
-        std::string     _pathToScript;
-        std::string     _scriptText;
-
+    public :
         lua_State*      _luaState;
 
 };

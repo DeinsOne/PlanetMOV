@@ -11,8 +11,9 @@
 
         {
             "label": "Earth",
+
             "fShader" : "assets/shaders/earthShader.fs.glsl",
-            "luaScript" : "assets/scripts/earthScript.lua"
+            "script" : "assets/scripts/earthScript.lua"
         },
 
 
