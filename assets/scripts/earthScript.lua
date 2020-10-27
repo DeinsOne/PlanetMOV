@@ -13,8 +13,8 @@ end
 
 -- Function calls before frame rendering
 function onUpdate()
-    a = Earth.pos.x - 1
-    Earth.pos = vec2(a, 0)
+    s = 26
+    Earth.pos = vec2(-math.sin(elapsedTime/3) * s, math.cos(elapsedTime/3) * s )
 
     return Earth
 end

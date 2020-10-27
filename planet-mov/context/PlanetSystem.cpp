@@ -6,6 +6,16 @@
 #include "TimeControl.h"
 #include "CameraControl.h"
 
+extern "C" {
+    #include "lua.h"
+    #include "lualib.h"
+    #include "lauxlib.h"
+    #include "luaconf.h"
+}
+
+#include "LuaBridge/LuaBridge.h"
+
+#include "cinder/Log.h"
 
 void PlanetSystem::loadPlanetsConfig(std::string _file)
 {

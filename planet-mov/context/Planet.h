@@ -21,15 +21,13 @@ class Planet {
 
 
         void BindShader(float elapsedTime, float deltaTime );
-
         void printFields() { printf("pos = { %f, %f }  |  size = %f\n", _pos.x, _pos.y, _size ); }
 
 
+        int bindCoreVariables();
 
         int callOnSetup();
-
         int callOnUpdate();
-
         int callOnRender();
         
 

@@ -74,12 +74,22 @@ void PlanetMOV::DrawGui() {
 
         // Restart button
         ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowPos().x + 38, ImGui::GetWindowPos().y + 6) );
-        if (customButton("", {20, 20} )) { TimeControl::Get()._elapsedTime = 0.0; }
+        if (customButton("", {20, 20} )) {
+            TimeControl::Get()._elapsedTime = 0.0;
+            PlanetSystem::Get().eventOnSetup();
+        }
 
 
         // Terminal button
         ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowPos().x + 70, ImGui::GetWindowPos().y + 6) );
-        if (customButton("", {20, 20}) ) { CI_LOG_I("Planets config folder is : " << "assets/" << "  | open console. . ." ); }
+        if (customButton("", {20, 20}) ) {
+            // CI_LOG_I("Planets config folder is : " << "assets/" << "  | open console. . ." );
+            CI_LOG_I("Reloading scripts...");
+
+            for (auto i : PlanetSystem::Get()._planets )
+                i.second->_script.reloadScript();
+
+        }
 
 
     ImGui::End();

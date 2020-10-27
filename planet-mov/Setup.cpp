@@ -4,6 +4,8 @@
 #include "cinder/CinderImGui.h"
 #include "cinder/Log.h"
 
+#include "LuaContext.h"
+
 void PlanetMOV::setup()
 {
     printf("Main display size : %d | %d\n", getDisplay()->getSize().x, getDisplay()->getSize().y);
@@ -26,5 +28,5 @@ void PlanetMOV::setup()
     // Initialize PlanetSystem
     PlanetSystem::Get().loadPlanetsConfig("assets/config/planet-mov.json" );
     PlanetSystem::Get().eventOnSetup();
-    
+
 }

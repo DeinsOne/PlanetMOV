@@ -6,6 +6,7 @@ extern "C" {
 
 #include "LuaScript.h"
 #include "cinder/Log.h"
+#include "LuaBridge/LuaBridge.h"
 
 void LuaScript::destroy() {
     _pathToScript.clear();

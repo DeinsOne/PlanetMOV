@@ -8,6 +8,8 @@ extern "C" {
 #include "LuaBridge/LuaBridge.h"
 #include "cinder/Log.h"
 
+#include "TimeControl.h"
+
 Planet::Planet(glm::vec2 pos, float size) : _pos(pos), _size(size)
 {
 }
@@ -59,6 +61,7 @@ int Planet::callOnUpdate() {
     if (this->_script._scriptText.empty() ) return 0;
 
     try {
+        bindCoreVariables();
         auto pt = luabridge::getGlobal(_script._luaState, "onUpdate" )();
 
         setFields(this, pt ); // Set result of script call to current planet
@@ -77,12 +80,17 @@ int Planet::callOnUpdate() {
 
 
 int Planet::callOnRender() {
-    if (this->_script._scriptText.empty() ) return 0;
 
+    return 0;
+} 
+
+
+
+
+int Planet::bindCoreVariables() {
     try {
-        auto pt = luabridge::getGlobal(_script._luaState, "onRender" )();
-
-        // setFields(this, pt ); // Set result of script call to current planet
+        luabridge::setGlobal<float>(_script._luaState, TimeControl::Get().getDeltaTime(), "deltaTime" );
+        luabridge::setGlobal<float>(_script._luaState, TimeControl::Get()._elapsedTime, "elapsedTime" );
     }
     catch (luabridge::LuaException& e ) {
         CI_LOG_EXCEPTION("", e );
@@ -94,4 +102,4 @@ int Planet::callOnRender() {
     }
 
     return 0;
-} 
+}
