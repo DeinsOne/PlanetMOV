@@ -12,6 +12,9 @@
 #include "TimeControl.h"
 #include "CameraControl.h"
 #include "PlanetSystem.h"
+#include "Error.h"
+
+#include "cinder/CinderImGui.h"
 
 
 class PlanetMOV : public cinder::app::App
@@ -30,9 +33,24 @@ private:
     void drawUI();
 
 public: // Gui
-    void DrawGui();
+    void setupGui();
+    void drawGui();
 
-    bool _toolsOpen = false;
+    void drawTools();
+    void drawButtons();
+    void drawErrors();
+
+
+    ImFont*     _fontDefault;
+    ImFont*     _fontMain12;
+    ImFont*     _fontMain14;
+    ImFont*     _fontMainBold14;
+    ImFont*     _fontSymbols;
+
+    bool        _toolsWindowOpen = false;
+    bool        _errorsWindowOpen = false;
+
+    float       _toolsXSize = 275;
 };
 
 #endif // _PLANET_MOV_H

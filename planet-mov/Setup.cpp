@@ -15,12 +15,7 @@ void PlanetMOV::setup()
     setWindowPos(glm::ivec2((getDisplay()->getSize().x / 2) - (getWindowSize().x / 2), (getDisplay()->getSize().y / 2) - (getWindowSize().y / 2)));
 
     // Initialize ImGui
-    ImGui::Initialize();
-    ImGui::GetIO().Fonts->AddFontDefault();
-    static ImWchar ranges[] = {0xf000, 0xf3ff, 0};
-    ImFontConfig config;
-    config.MergeMode = true;
-    ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
+    setupGui();
 
     // TimeControl PlanetSystem
     TimeControl::Get().initTimeControl();

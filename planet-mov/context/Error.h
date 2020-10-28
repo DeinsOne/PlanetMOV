@@ -41,7 +41,7 @@ class ErrorHandler {
         }
 
         // TODO:
-        void pop(uint idx) { }
+        void pop(uint idx) { _errors.erase(_errors.begin() + idx ); }
 
 };
 

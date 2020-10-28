@@ -55,7 +55,22 @@ std::vector<std::string> split(std::string s, std::string delimiter) {
 }
 
 
-void PlanetMOV::DrawGui() {
+void PlanetMOV::setupGui() {
+    ImGui::Initialize();
+    _fontDefault = ImGui::GetIO().Fonts->AddFontDefault();
+
+    static ImWchar ranges[] = {0xf000, 0xf3ff, 0};
+    ImFontConfig config;
+    config.MergeMode = true;
+    _fontSymbols = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
+
+    _fontMain12 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Regular.ttf", 12.0f);
+    _fontMain14 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Regular.ttf", 14.0f);
+    _fontMainBold14 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Bold.ttf", 14.0f );
+
+}
+
+void PlanetMOV::drawButtons() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, {0,0} );
 
     static short wnFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NavFlattened;
@@ -96,36 +111,31 @@ void PlanetMOV::DrawGui() {
 
     ImGui::End();
 
-
-    // Time info
-    ImGui::SetNextWindowSize(ImVec2(172, 51) );
-    ImGui::SetNextWindowPos(ImVec2(getWindowSize().x - 172 - 96 - 3, 2 ) );
-    ImGui::Begin("DebugWindow", nullptr, wnFlags | ImGuiWindowFlags_NoBackground );
-        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,1,1,0.5) );
-        ImGui::Text("%f : %s", TimeControl::Get()._elapsedTime, "_elapsedTime" );
-        ImGui::Text("%f : %s", TimeControl::Get().getDeltaTime(), "_deltaTime" );
-        ImGui::PopStyleColor();
-    ImGui::End();
-
-
     ImGui::PopStyleVar();
+}
 
 
+void PlanetMOV::drawTools() {
+
+    static short wnFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NavFlattened;
 
     // Editor and tools
-    if (_toolsOpen ) {
+    if (_toolsWindowOpen ) {
         ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0 );
         ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0 );
-        ImGui::SetNextWindowSize(ImVec2(275, ci::app::getWindow()->getSize().y) );
+        ImGui::SetNextWindowSize(ImVec2(_toolsXSize, ci::app::getWindow()->getSize().y) );
         ImGui::SetNextWindowPos(ImVec2(0, 0 ) );
         ImGui::Begin("Tools", nullptr, wnFlags );
+            ImGui::PushFont(_fontMainBold14 );
             PlanetSystem::Get()._selectedPlanet.empty() ? ImGui::TextColored(ImVec4(1,1,1,0.4), "No selected planet") : ImGui::Text("%s", PlanetSystem::Get()._selectedPlanet.c_str() ); 
+            ImGui::PopFont();
 
 
             ImGui::Separator(); ImGui::Spacing();
 
             // Tool
             if (!PlanetSystem::Get()._selectedPlanet.empty() ) {
+                ImGui::PushFont(_fontMain12 );
                 if (ImGui::TreeNode("Planet") ) {
                     ImGui::LabelText("Name", "%s", PlanetSystem::Get()._selectedPlanet.c_str() );
                     ImGui::Spacing();
@@ -173,15 +183,19 @@ void PlanetMOV::DrawGui() {
                         ImGui::TreePop();
                     }
                 }
+
+                ImGui::PopFont();
             }
 
 
             ImGui::SetCursorScreenPos(ImVec2((ImGui::GetWindowSize().x/2) - (ImGui::CalcTextSize("vrs:x.x.x").x/2), ImGui::GetWindowSize().y - ImGui::GetFrameHeight()) );
+            ImGui::PushFont(_fontMain12 );
             ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:prealpha" );
+            ImGui::PopFont();
 
             // Close tools window button
             ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowSize().x-26, 6 ) );
-            if (customButton("", {20, 20}, {1,1,1}, true) ) { _toolsOpen = false; }
+            if (customButton("", {20, 20}, {1,1,1}, true) ) { _toolsWindowOpen = false; }
         ImGui::End();
         ImGui::PopStyleVar(2);
     }
@@ -190,10 +204,109 @@ void PlanetMOV::DrawGui() {
         ImGui::SetNextWindowPos(ImVec2(6,6) );
         ImGui::Begin("ButonForOpen", nullptr, wnFlags | ImGuiWindowFlags_NoBackground );
             // Open tools window button
-            if (customButton("", {25, 25}, {1,1,1}, true) ) { _toolsOpen = true; }
+            if (customButton("", {25, 25}, {1,1,1}, true) ) { _toolsWindowOpen = true; }
         ImGui::End();
         ImGui::PopStyleVar();
     }
+
+}
+
+void PlanetMOV::drawGui() {
+    static short wnFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NavFlattened;
+
+    drawButtons();
+
+    drawTools();
+
+    drawErrors();
+
+    // Time info
+    ImGui::SetNextWindowSize(ImVec2(172, 51) );
+    ImGui::SetNextWindowPos(ImVec2(getWindowSize().x - 172 - 96 - 3, 2 ) );
+    ImGui::Begin("DebugWindow", nullptr, wnFlags | ImGuiWindowFlags_NoBackground );
+        ImGui::PushFont(_fontMain12 );
+        ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1,1,1,0.5) );
+        ImGui::Text("%f : %s", TimeControl::Get()._elapsedTime, "_elapsedTime" );
+        ImGui::Text("%f : %s", TimeControl::Get().getDeltaTime(), "_deltaTime" );
+        ImGui::PopStyleColor();
+        ImGui::PopFont();
+    ImGui::End();
+
+
+}
+
+void PlanetMOV::drawErrors() {
+    static short wnFlags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoTitleBar;
+
+
+    ImGui::SetNextWindowSize(ImVec2(30, 30) );
+    ImGui::SetNextWindowPos(_toolsWindowOpen ? ImVec2(_toolsXSize + 3, 2) : ImVec2(26, 2) );
+    ImGui::Begin("Errors", nullptr, wnFlags | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration );
+        if (customButton("", ImVec2(20,20), ErrorHandler::Get()._errors.size() > 0 ? glm::vec3(1,0,0) : glm::vec3(1,1,1), true) ) _errorsWindowOpen = !_errorsWindowOpen;
+    ImGui::End();
+
+
+    if (_errorsWindowOpen ) {
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 3.0 );
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0 );
+        ImGui::PushStyleVar(ImGuiStyleVar_ScrollbarSize, 6.0 );
+
+        ImGui::SetNextWindowSize(ImVec2(295, 150) );
+        ImGui::SetNextWindowPos(_toolsWindowOpen ? ImVec2(_toolsXSize + 36, 12) : ImVec2(56, 12) );
+        ImGui::Begin("ErrorsWindow", nullptr, wnFlags | ImGuiWindowFlags_NoResize );
+            if (!ErrorHandler::Get()._errors.size() ) ImGui::TextColored(ImVec4(1,1,1,0.4), "No errors" );
+            else {
+                for (int i = 0; i < ErrorHandler::Get()._errors.size(); i++ ) {
+                    std::string ers = "err:";
+                    ers += std::to_string(i);
+
+                    ImGui::BeginChild(ers.c_str(), {0, 45 } );
+
+                    ImVec4 _cl = ImVec4(1,0,0,1);
+                    std::string _lb = "?";
+                    ErrorType _ert = ErrorHandler::Get()._errors.at(i)._type;
+                    switch (_ert) {
+                        case (ErrorType::Error_Script) : { _cl = ImVec4(1,1,1,1); _lb = ""; break; }
+                        case (ErrorType::Error_Shader) : { _cl = ImVec4(1,1,1,1); _lb = ""; break; }
+                        case (ErrorType::Error_Config) : { _cl = ImVec4(1,1,1,1); _lb = ""; break; }
+                    }
+
+                    ImVec2 _pos = ImGui::GetCursorScreenPos();
+                    ImGui::GetWindowDrawList()->AddText(ImGui::GetIO().Fonts->Fonts[0], 12, {_pos.x , _pos.y + 4}, ImGui::GetColorU32(_cl), _lb.c_str() );
+
+                    ImGui::PushFont(_fontMain14 );
+                    ImGui::SetCursorScreenPos({_pos.x + 15, _pos.y});
+                    ImGui::Text(ErrorHandler::Get()._errors.at(i)._title.c_str() );
+                    ImGui::PopFont();
+
+
+                    ImGui::SetCursorScreenPos(ImVec2(_pos.x + 19, _pos.y + 14) );
+                    ImGui::PushFont(_fontMain12 );
+                    ImGui::TextColored(ImVec4(1,1,1,0.4), ErrorHandler::Get()._errors.at(i)._details.c_str() );
+                    ImGui::PopFont();
+
+
+                    ImGui::Spacing();
+
+                    if (i != ErrorHandler::Get()._errors.size() - 1) ImGui::Separator();
+                    ImGui::EndChild();
+
+
+                    if (ImGui::IsItemHovered() ) {
+                        
+                    }
+
+                    if (ImGui::IsItemClicked() ) {
+                        ErrorHandler::Get().pop(i );
+                    }
+                }
+            }
+
+        ImGui::End();
+
+        ImGui::PopStyleVar(3 );
+    }
+
 
 
 }

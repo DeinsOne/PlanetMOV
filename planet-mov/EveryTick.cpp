@@ -15,10 +15,6 @@ void PlanetMOV::update() {
 
     PlanetSystem::Get().update();
 
-    if (TimeControl::Get()._play ) {
-        PlanetSystem::Get().eventOnUpdate();
-    }
-
 }
 
 
@@ -27,7 +23,7 @@ void PlanetMOV::draw() {
     ci::gl::clear(ci::Color::hex(0x313131) );
     ci::gl::setMatrices(CameraControl::Get()._camera );
 
-    DrawGui();
+    drawGui();
 
 
     PlanetSystem::Get().draw();
