@@ -14,6 +14,7 @@ void PlanetMOV::update() {
     CameraControl::Get().update();
 
     PlanetSystem::Get().update();
+
 }
 
 
@@ -22,7 +23,7 @@ void PlanetMOV::draw() {
     ci::gl::clear(ci::Color::hex(0x313131) );
     ci::gl::setMatrices(CameraControl::Get()._camera );
 
-    DrawGui();
+    drawGui();
 
 
     PlanetSystem::Get().draw();
