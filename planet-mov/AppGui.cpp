@@ -98,13 +98,18 @@ void PlanetMOV::drawButtons() {
         // Terminal button
         ImGui::SetCursorScreenPos(ImVec2(ImGui::GetWindowPos().x + 70, ImGui::GetWindowPos().y + 6) );
         if (customButton("", {20, 20}) ) {
-            // CI_LOG_I("Planets config folder is : " << "assets/" << "  | open console. . ." );
             CI_LOG_I("Reloading scripts...");
+            ErrorHandler::Get()._errors.clear();
 
             for (auto i : PlanetSystem::Get()._planets ) {
-                i.second->_script.reload();
-                i.second->_script.check();
+                i.second->_script.destroy();
+                i.second->_shader.destroy();
+                i.second.reset();
             }
+            
+
+            PlanetSystem::Get()._planets.clear();
+            PlanetSystem::Get().loadPlanets("assets/config/planet-mov.json" );
 
         }
 
@@ -288,17 +293,15 @@ void PlanetMOV::drawErrors() {
 
                     ImGui::Spacing();
 
-                    if (i != ErrorHandler::Get()._errors.size() - 1) ImGui::Separator();
                     ImGui::EndChild();
+                    if (i != ErrorHandler::Get()._errors.size() - 1) ImGui::Separator();
 
 
                     if (ImGui::IsItemHovered() ) {
-                        
                     }
 
-                    if (ImGui::IsItemClicked() ) {
-                        ErrorHandler::Get().pop(i );
-                    }
+                    // if (ImGui::IsItemClicked() ) ErrorHandler::Get().pop(i );
+
                 }
             }
 

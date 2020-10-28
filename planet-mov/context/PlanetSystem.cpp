@@ -29,7 +29,7 @@ void PlanetSystem::loadPlanets(std::string _file)
     }
     catch (std::exception& e) {
         CI_LOG_EXCEPTION("", e );
-        ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config", e.what()) );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config not found", e.what()) );
     }
 
 
@@ -54,7 +54,7 @@ void PlanetSystem::loadPlanets(std::string _file)
                 ErrorHandler::Get().push(er1 );
             } else {
                 CI_LOG_E("planets-config[" << i << "] : undefined planets label" );
-                ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Planet ID", "undefined planets label") );
+                ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config", _file + std::string(":planets[") + std::to_string(i) + std::string("]") + std::string(": undefined planets label")) );
             }
         }
     }
@@ -64,6 +64,9 @@ void PlanetSystem::loadPlanets(std::string _file)
     for (auto i : _planets ) {
         i.second->_script.check();
     }
+
+
+    eventOnSetup();
 }
 
 void PlanetSystem::update()
@@ -176,7 +179,7 @@ void PlanetSystem::eventOnSetup() {
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Function onSetup", e.what()) );
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onSetup", e.what()) );
         }
 
     }
@@ -205,7 +208,7 @@ void PlanetSystem::eventOnUpdate() {
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Function onUpdate", e.what()) );
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
 
             TimeControl::Get()._play = false;
         }

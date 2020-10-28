@@ -57,25 +57,25 @@ Error LuaScript::load(std::string path ) {
 
 int LuaScript::check() {
     if (_textSEntt.empty() ) return 0;
+    std::string _beg = _pathSEntt;
 
     try {
         auto onSetup = luabridge::getGlobal(_luaState, Labels[Labels_OnSetup].first );
-        if (!onSetup.isFunction() ) throw std::runtime_error("onSetup is not a function");
+        if (!onSetup.isFunction() ) throw std::runtime_error(_beg + std::string(": onSetup is not a function") );
     } catch (std::exception& e ) {
         CI_LOG_EXCEPTION(_pathSEntt, e );
-        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "onSetup", e.what()) );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script", e.what()) );
     }
 
 
     try {
         auto onUpdate = luabridge::getGlobal(_luaState, Labels[Labels_OnUpdate].first );
-        if (!onUpdate.isFunction() ) throw std::runtime_error("onUpdate is not a function");
+        if (!onUpdate.isFunction() ) throw std::runtime_error(_beg + std::string(": onUpdate is not a function") );
     } catch (std::exception& e ) {
         CI_LOG_EXCEPTION(_pathSEntt, e );
-        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "onUpdate", e.what()) );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script", e.what()) );
     }
 
-    catch (...) { }
 
     return 0;
 }
