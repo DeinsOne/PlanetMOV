@@ -109,7 +109,7 @@ void PlanetMOV::drawButtons() {
             
 
             PlanetSystem::Get()._planets.clear();
-            PlanetSystem::Get().loadPlanets("assets/config/planet-mov.json" );
+            PlanetSystem::Get().loadPlanets("assets/planet-mov.json" );
 
         }
 
@@ -195,7 +195,7 @@ void PlanetMOV::drawTools() {
 
             ImGui::SetCursorScreenPos(ImVec2((ImGui::GetWindowSize().x/2) - (ImGui::CalcTextSize("vrs:x.x.x").x/2), ImGui::GetWindowSize().y - ImGui::GetFrameHeight()) );
             ImGui::PushFont(_fontMain12 );
-            ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:prealpha" );
+            ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:1.0.0" );
             ImGui::PopFont();
 
             // Close tools window button

@@ -38,7 +38,7 @@ Error Shader::load(std::string path ) {
     } catch (std::exception& e ) {
         CI_LOG_EXCEPTION("", e);
 
-        return Error(ErrorType::Error_Script, "Shader", e.what() );
+        return Error(ErrorType::Error_Shader, "Shader", e.what() );
     }
 
     return Error(ErrorType::Error_None, "", "" );

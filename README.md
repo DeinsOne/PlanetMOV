@@ -7,7 +7,7 @@ PlanetMOV is a lightweight solar system emulator that uses Lua scripts and diffe
 
 Currently supports only Linux.
 
-![](assets/Screenshot1.png)
+![](docs/Screenshot1.png)
 
 
 
@@ -15,15 +15,14 @@ Currently supports only Linux.
 
 - [x] Linux build system
 - [x] Planets config file
-- [ ] Glsl shaders
-    - [x] Fragment shaders
-    - [ ] Vertex shades
+- [x] Glsl shaders
+    - [x] FragmetShaders
+    - [ ] Vertex shaders
 - [ ] Hlsl shaders
-- [ ] SPIRV shaders
-- [ ] Lua scripting
-    - [ ] PlanetMOV Lua headers(classes and functions set) 
-    - [ ] VM binding(binding scripts to plants)
-    - [ ] Events(OnStart, OnUpdate, OnRender)
+- [x] Lua scripting
+    - [x] VM binding(binding scripts to plants) 
+    - [x] Events(onSetup, onUpdate)
+    - [ ] PlanetMOV Lua set(classes, functions)
 
 
 More information can be found on [PlanetMOV Trello](https://trello.com/b/55gNFNto)
@@ -36,6 +35,8 @@ This project uses:
 - [cinder/Cinder](https://github.com/cinder/Cinder.git)
 - [flingengine/Catch2](https://github.com/flingengine/Catch2.git)
 - [open-source-parsers/jsoncpp](https://github.com/open-source-parsers/jsoncpp.git)
+- [lua/lua](https://github.com/lua/lua.git)
+- [vinniefalco/LuaBridge](https://github.com/vinniefalco/LuaBridge.git)
 
 
 
@@ -55,28 +56,45 @@ Install all the libraries that are needed:
 
 ```
 # Ubuntu
-sudo apt install libsdl2-dev libsfml-dev libglew-dev libglm-dev libgtk-3-dev
+sudo apt-get install libxcursor-dev \
+    libxrandr-dev \
+    libxinerama-dev \
+    libxi-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
+    zlib1g-dev \
+    libfontconfig1-dev \
+    libmpg123-dev \
+    libsndfile1 \
+    libsndfile1-dev \
+    libpulse-dev \
+    libasound2-dev \
+    libcurl4-gnutls-dev \
+    libgstreamer1.0-dev \
+    libgstreamer-plugins-bad1.0-dev \
+    libgstreamer-plugins-base1.0-dev \
+    gstreamer1.0-libav \
+    gstreamer1.0-alsa \
+    gstreamer1.0-pulseaudio \
+    gstreamer1.0-plugins-bad \
+    libboost-filesystem-dev
 
 # Fedora
 sudo dnf install SFML-devel glm-devel glew-devel SDL2-devel gtk3-devel
 ```
+
+__Note:__ See [Cinder](https://libcinder.org/docs/index.html) documentation to get required libs
 
 ### Build
 
 ```
 ./build.sh
 
-# Or manually
-cmake .
-make
-```
-
-__Note:__ You can use building flags to specify building behavior. All flags detecting manually by default 
-
-```
+# or 
 ./build.sh -buildtype="Release/Debug" -gltarget="ogl/es2"
 ```
 
+__Note:__ You can use building flags to specify building behavior. All flags detecting manually by default 
 
 
 ## Licence

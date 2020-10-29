@@ -1,0 +1,32 @@
+{
+    "version": "1.0.0",
+    "planets": [
+        {
+            "label": "Sun",
+            "size": 7.0,
+            "pos" : [ 0, 0 ],
+
+            "fShader" : "samples/shaders/sunShader.fs.glsl"
+        },
+
+
+
+        {
+            "label": "Earth",
+
+            "fShader" : "samples/shaders/earthShader.fs.glsl",
+            "script" : "samples/scripts/earthScript.lua"
+        },
+
+        {
+            "label": "Moon",
+
+            "fShader" : "samples/shaders/moonShader.fs.glsl",
+            "script" : "samples/scripts/moonScript.lua"
+        }
+
+    
+    ]
+
+}
+

@@ -21,6 +21,6 @@ void PlanetMOV::setup()
     TimeControl::Get().initTimeControl();
 
     // Initialize PlanetSystem
-    PlanetSystem::Get().loadPlanets("assets/config/planet-mov.json" );
+    PlanetSystem::Get().loadPlanets("assets/planet-mov.json" );
 
 }

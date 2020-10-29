@@ -198,10 +198,10 @@ void PlanetSystem::eventOnUpdate() {
             luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
 
             // Call onUpdate
-            auto onSetup = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
-            auto planet = onSetup();
+            auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
+            auto planet = onUpdate();
 
-            if (onSetup.isFunction() ) {
+            if (onUpdate.isFunction() ) {
                 i.second->_pos = static_cast<Planet>(planet)._pos;
                 i.second->_size = static_cast<Planet>(planet)._size;
             }
