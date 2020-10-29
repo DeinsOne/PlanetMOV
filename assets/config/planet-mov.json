@@ -9,6 +9,8 @@
             "fShader" : "assets/shaders/sunShader.fs.glsl"
         },
 
+
+
         {
             "label": "Earth",
 
@@ -16,14 +18,11 @@
             "script" : "assets/scripts/earthScript.lua"
         },
 
-
-
         {
             "label": "Moon",
-            "radius" : 1.3, 
-            "pos" : [ 30, 5 ],
 
-            "fShader" : "assets/shaders/moonShader.fs.glsl"
+            "fShader" : "assets/shaders/moonShader.fs.glsl",
+            "script" : "assets/scripts/moonScript.lua"
         }
 
     

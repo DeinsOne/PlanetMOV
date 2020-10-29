@@ -9,8 +9,11 @@ extern "C" {
 #include "LuaBridge/LuaBridge.h"
 #include "cinder/Log.h"
 
-#include "Planet.h"
+// #include "Planet.h"
 
+#include "PlanetSystem.h"
+
+Planet* getPlanet(std::string name ) { return PlanetSystem::Get()._planets[name].get(); }
 
 // TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
@@ -27,7 +30,11 @@ void LuaContext::_luaBindCore(lua_State* L ) {
             /* ... */
 
         .endClass()
+
+        .addFunction("getPlanet", getPlanet )
     ;
+
+
 }
 
 // TODO:

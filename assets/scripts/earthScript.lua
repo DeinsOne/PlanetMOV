@@ -10,8 +10,9 @@ end
 
 -- Function calls before frame rendering
 function onUpdate()
-    s = 26
-    Earth.pos = vec2(-math.sin(elapsedTime/3) * s, math.cos(elapsedTime/3) * s )
+    EarthS = 26
+    SunPos = getPlanet('Sun').pos
+    Earth.pos = vec2(SunPos.x -math.sin(elapsedTime/3) * EarthS, SunPos.y + math.cos(elapsedTime/3) * EarthS ) 
 
     return Earth
 end
