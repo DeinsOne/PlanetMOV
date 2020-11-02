@@ -76,6 +76,7 @@ void PlanetSystem::loadPlanets(std::string _file)
     // FIXME: Check errors
     for (auto i : _planets ) {
         i.second->_script.check();
+        i.second->_shader.check();
     }
 
 
@@ -132,15 +133,12 @@ void PlanetSystem::draw()
 
         if (planet.second->_shader._shader ) {
             planet.second->_shader._shader->bind();
-            planet.second->_shader._shader->uniform("elapsedTime", TimeControl::Get()._elapsedTime );
-            planet.second->_shader._shader->uniform("deltaTime", TimeControl::Get().getDeltaTime() );
+            planet.second->_shader.bindArgs(TimeControl::Get()._elapsedTime, TimeControl::Get().getDeltaTime() );
             planet.second->_shader._shader->uniform("planetRadius", planet.second->_size );
         }
         else
             ci::gl::color(ci::Color::hex(0xeeeeee));
 
-        // FIXME: Integrate lod system for vertices num
-        // float y1, y2 = loadExponent(planet.second->_size );
         ci::gl::drawSolidCircle({}, planet.second->_size, lodExponent(planet.second->_size) );
     }
 

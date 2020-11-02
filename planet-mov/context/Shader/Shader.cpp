@@ -18,8 +18,6 @@ void Shader::bindArgs(float elapsedTime, float deltaTime ) {
     if (_shader ) {
         _shader->uniform("elapsedTime", elapsedTime);
         _shader->uniform("deltaTime", deltaTime);
-
-        // _shader->uniform("planetRadius", _size);
     }
 }
 
@@ -47,5 +45,5 @@ Error Shader::load(std::string path ) {
 
 
 int Shader::check() {
-
+    return 0;
 }
