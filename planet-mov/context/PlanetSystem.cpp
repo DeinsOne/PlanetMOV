@@ -45,31 +45,24 @@ void PlanetSystem::loadPlanets(std::string _file)
         ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config not found", e.what()) );
     }
 
-
-    // Load planets
-    if (_planetsConfig["planets"].isArray()) {
-        for (int i = 0; i < _planetsConfig["planets"].size(); i++) {
-            std::string     _id = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_ID, "");
-            float           _size = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Radius, 0.0f);
-            glm::vec2       _pos = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Pos, glm::vec2(0.0f, 0.0f));
-            std::string     _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/default.fs.glsl");
+    for (auto i : _planetsConfig["planets"].getMemberNames() ) {
+        float           _size = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Radius, 0.0f);
+        glm::vec2       _pos = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Pos, glm::vec2(0.0f, 0.0f));
+        std::string     _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/default.fs.glsl");
 
 
-            if (!_id.empty() ) {
-                _planets[_id] = std::make_shared<Planet>(_pos, _size);
+        if (!i.empty() ) {
+            _planets[i] = std::make_shared<Planet>(_pos, _size);
 
-                // Load shader
-                auto er = _planets[_id]->_shader.load(_fShader );
-                ErrorHandler::Get().push(er );
+            // Load shader
+            auto er = _planets[i]->_shader.load(_fShader );
+            ErrorHandler::Get().push(er );
 
-                // Load script
-                auto er1 = _planets[_id]->_script.load(Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "") );
-                ErrorHandler::Get().push(er1 );
-            } else {
-                CI_LOG_E("planets-config[" << i << "] : undefined planets label" );
-                ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config", _file + std::string(":planets[") + std::to_string(i) + std::string("]") + std::string(": undefined planets label")) );
-            }
-        }
+            // Load script
+            auto er1 = _planets[i]->_script.load(Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "") );
+            ErrorHandler::Get().push(er1 );
+        } 
+
     }
 
 

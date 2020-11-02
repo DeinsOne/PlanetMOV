@@ -195,7 +195,7 @@ void PlanetMOV::drawTools() {
 
             ImGui::SetCursorScreenPos(ImVec2((ImGui::GetWindowSize().x/2) - (ImGui::CalcTextSize("vrs:x.x.x").x/2), ImGui::GetWindowSize().y - ImGui::GetFrameHeight()) );
             ImGui::PushFont(_fontMain12 );
-            ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:1.1.1" );
+            ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:1.1.2" );
             ImGui::PopFont();
 
             // Close tools window button
