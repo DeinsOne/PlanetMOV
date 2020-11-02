@@ -18,6 +18,19 @@ extern "C" {
 
 #include "cinder/Log.h"
 
+float lodExponent(float size ) {
+    // float t = pow(size, 2) - (8.3 * size) -1500 + 9.1;
+    // float sqrtD = sqrt(pow(85.0, 2) + (4 * t ));
+
+    // float y1 = (-85 + sqrtD)/2;
+    // float y2 = (-85 - sqrtD)/2;
+ 
+    // if (y1 < 0 ) return y2;
+    // else return y1;
+
+    return 44;
+}
+
 void PlanetSystem::loadPlanets(std::string _file)
 {
     Json::Value _planetsConfig;
@@ -117,7 +130,6 @@ void PlanetSystem::draw()
             ci::gl::drawSolidCircle({}, planet.second->_size + _radiusOfBorder, planet.second->_size * 12);
         }
 
-        // FIXME:
         if (planet.second->_shader._shader ) {
             planet.second->_shader._shader->bind();
             planet.second->_shader._shader->uniform("elapsedTime", TimeControl::Get()._elapsedTime );
@@ -126,7 +138,10 @@ void PlanetSystem::draw()
         }
         else
             ci::gl::color(ci::Color::hex(0xeeeeee));
-        ci::gl::drawSolidCircle({}, planet.second->_size, planet.second->_size * 12);
+
+        // FIXME: Integrate lod system for vertices num
+        // float y1, y2 = loadExponent(planet.second->_size );
+        ci::gl::drawSolidCircle({}, planet.second->_size, lodExponent(planet.second->_size) );
     }
 
     // Draw separeate fbo to give possibility planet picking

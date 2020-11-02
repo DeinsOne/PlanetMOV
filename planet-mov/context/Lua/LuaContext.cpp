@@ -13,7 +13,13 @@ extern "C" {
 
 #include "PlanetSystem.h"
 
-Planet* getPlanet(std::string name ) { return PlanetSystem::Get()._planets[name].get(); }
+Planet* getPlanet(std::string name ) {
+    auto it = PlanetSystem::Get()._planets.find(name);
+    if (it->second )
+        return PlanetSystem::Get()._planets[name].get();
+    else
+        return nullptr;
+}
 
 // TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
