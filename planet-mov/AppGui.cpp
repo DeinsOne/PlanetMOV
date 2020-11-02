@@ -62,11 +62,45 @@ void PlanetMOV::setupGui() {
     static ImWchar ranges[] = {0xf000, 0xf3ff, 0};
     ImFontConfig config;
     config.MergeMode = true;
-    _fontSymbols = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
 
-    _fontMain12 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Regular.ttf", 12.0f);
-    _fontMain14 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Regular.ttf", 14.0f);
-    _fontMainBold14 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Bold.ttf", 14.0f );
+    try {
+        _fontSymbols = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/fa-solid-900.ttf", 12.0f, &config, ranges);
+        if (!_fontSymbols ) throw std::runtime_error(std::string("assets/fonts/fa-solid-900.ttf -> ") + std::string("Font did not loaded") );
+    } catch (std::exception& e ) {
+        CI_LOG_EXCEPTION("", e );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Font loading", e.what() ) );
+        _fontSymbols = _fontDefault;
+    }
+
+
+    try {
+        _fontMain12 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Regular.ttf", 12.0f);
+        if (!_fontMain12 ) throw std::runtime_error(std::string("assets/fonts/UbuntuMono-Regular.ttf -> ") + std::string("Font did not loaded") );
+    } catch (std::exception& e ) {
+        CI_LOG_EXCEPTION("", e );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Font loading", e.what() ) );
+        _fontMain12 = _fontDefault;
+    }
+
+
+    try {
+        _fontMain14 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Regular.ttf", 14.0f);
+        if (!_fontMain14 ) throw std::runtime_error(std::string("assets/fonts/UbuntuMono-Regular.ttf -> ") + std::string("Font did not loaded") );
+    } catch (std::exception& e ) {
+        CI_LOG_EXCEPTION("", e );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Font loading", e.what() ) );
+        _fontMain14 = _fontDefault;
+    }
+
+
+    try {
+        _fontMainBold14 = ImGui::GetIO().Fonts->AddFontFromFileTTF("assets/fonts/UbuntuMono-Bold.ttf", 14.0f );
+        if (!_fontMainBold14 ) throw std::runtime_error(std::string("assets/fonts/UbuntuMono-Bold.ttf -> ") + std::string("Font did not loaded") );
+    } catch (std::exception& e ) {
+        CI_LOG_EXCEPTION("", e );
+        ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Font loading", e.what() ) );
+        _fontMainBold14 = _fontDefault;
+    }
 
 }
 
@@ -195,7 +229,7 @@ void PlanetMOV::drawTools() {
 
             ImGui::SetCursorScreenPos(ImVec2((ImGui::GetWindowSize().x/2) - (ImGui::CalcTextSize("vrs:x.x.x").x/2), ImGui::GetWindowSize().y - ImGui::GetFrameHeight()) );
             ImGui::PushFont(_fontMain12 );
-            ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:1.1.2" );
+            ImGui::TextColored(ImVec4(1,1,1,0.4), "Vrs:1.1.3" );
             ImGui::PopFont();
 
             // Close tools window button
