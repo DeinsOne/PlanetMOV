@@ -8,3 +8,4 @@
 #include "core/JsonConfigTest.cpp"
 #include "core/TimeControlTest.cpp"
 
+#include "lua/luaContext.cpp"

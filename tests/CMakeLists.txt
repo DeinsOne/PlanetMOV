@@ -16,12 +16,8 @@ set(TEST_GENERAL_INCLUDE
 
 
 # General linck libraries for tests
-add_library(jsnocpp SHARED
-    ${TESTS_FOLDER}/../planet-mov/utils/jsoncpp/src/lib_json/json_reader.cpp
-    ${TESTS_FOLDER}/../planet-mov/utils/jsoncpp/src/lib_json/json_value.cpp
-    ${TESTS_FOLDER}/../planet-mov/utils/jsoncpp/src/lib_json/json_writer.cpp
-)
-target_include_directories(jsnocpp PRIVATE ${TESTS_FOLDER}/../planet-mov/utils/jsoncpp/include )
+set(LIB_JSONCPP "${TESTS_FOLDER}/../build/libjsnocpp.so" )
+set(LIB_LUA "${TESTS_FOLDER}/../build/liblua.so" )
 
 
 
@@ -40,7 +36,27 @@ foreach( SourceFile ${TEST_CORE_SOURCES} )
     include_directories(${TEST_GENERAL_INCLUDE} ${TEST_CORE_INCLUDE} )
     add_executable(${SourceFileName} ${SourceFile} )
     set_target_properties(${SourceFileName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${TESTS_FOLDER}/bin/core")
-    target_link_libraries(${SourceFileName} jsnocpp )
+    target_link_libraries(${SourceFileName} ${LIB_JSONCPP} )
+
+endforeach()
+
+
+
+# Lua tests
+set(TEST_LUA_SOURCES
+    ${TESTS_FOLDER}/src/lua/luaContext.cpp
+)
+set(TEST_LUA_INCLUDE
+    ${TESTS_FOLDER}/../planet-mov/utils/Lua
+)
+
+foreach( SourceFile ${TEST_LUA_SOURCES} )
+    get_filename_component(SourceFileName ${SourceFile} NAME_WLE )
+
+    include_directories(${TEST_GENERAL_INCLUDE} ${TEST_LUA_INCLUDE} )
+    add_executable(${SourceFileName} ${SourceFile} )
+    set_target_properties(${SourceFileName} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${TESTS_FOLDER}/bin/lua")
+    target_link_libraries(${SourceFileName} ${LIB_LUA} )
 
 endforeach()
 
@@ -52,5 +68,6 @@ set_target_properties(TestExecutor PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${TESTS_
 target_include_directories(TestExecutor 
     PRIVATE ${TEST_GENERAL_INCLUDE}
     PRIVATE ${TEST_CORE_INCLUDE}
+    PRIVATE ${TEST_LUA_INCLUDE}
 )
-target_link_libraries(TestExecutor jsnocpp )
+target_link_libraries(TestExecutor ${LIB_JSONCPP} ${LIB_LUA} )

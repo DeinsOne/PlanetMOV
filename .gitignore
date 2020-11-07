@@ -2,6 +2,7 @@
 build/
 CMakeFiles/
 tests/bin/core
+tests/bin/lua
 
 
 *.log
