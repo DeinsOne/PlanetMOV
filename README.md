@@ -1,14 +1,12 @@
 # PlanetMOV
 
+![](docs/MovIco.svg)
 ![GitHub repo size](https://img.shields.io/github/languages/code-size/DeinsOne/PlanetMOV?style=flat-square&color=red)
 ![Licence](https://img.shields.io/github/license/DeinsOne/PlanetMOV?style=flat-square&color=red)
 
 PlanetMOV is a lightweight solar system emulator that uses Lua scripts and different shaders instead of control components. Main purpose of project is getting know how to work with Cinder library(Render process and function set), Lua binder, shader languages and program architecture.
 
 Currently supports only Linux.
-
-![](docs/Screenshot1.png)
-
 
 
 ## Futures
@@ -80,7 +78,22 @@ sudo apt-get install libxcursor-dev \
     libboost-filesystem-dev
 
 # Fedora
-sudo dnf install SFML-devel glm-devel glew-devel SDL2-devel gtk3-devel
+sudo dnf install \
+    mesa-libGL-devel \
+    mesa-libGLU-devel \
+    zlib-devel \
+    libcurl-devel \
+    pulseaudio-libs-devel \
+    libmpg123-devel \
+    libsndfile-devel \
+    libXcursor-devel \
+    libXrandr-devel \
+    libXinerama-devel \
+    libXi-devel \
+    gstreamer1-devel \
+    gstreamer1-plugins-base-devel \
+    gstreamer1-plugins-bad-free-devel \
+    fontconfig-devel
 ```
 
 __Note:__ See [Cinder](https://libcinder.org/docs/index.html) documentation to get required libs
