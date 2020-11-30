@@ -9,8 +9,6 @@ extern "C" {
 #include "LuaBridge/LuaBridge.h"
 #include "cinder/Log.h"
 
-// #include "Planet.h"
-
 #include "PlanetSystem.h"
 
 Planet* getPlanet(std::string name ) {
@@ -47,6 +45,7 @@ void LuaContext::_luaBindGlm(lua_State* L ) {
         .endClass()
 
         .beginNamespace("glm")
+            //  Geometry functions
             .addFunction("cross", std::function<glm::vec2 (glm::vec2)> ( [](glm::vec2 a) { return glm::vec2(a.y, -a.x); } ))
             .addFunction("distance", std::function<float (glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b) { return glm::distance(a,b); } ))
             .addFunction("dot", std::function<float (glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b) { return glm::dot(a,b); } ))
@@ -54,6 +53,9 @@ void LuaContext::_luaBindGlm(lua_State* L ) {
             .addFunction("length", std::function<float (glm::vec2)> ( [](glm::vec2 a) { return glm::length(a ); }))
             .addFunction("normalize", std::function<glm::vec2 (glm::vec2)> ( [](glm::vec2 a) { return glm::normalize(a ); } ))
             .addFunction("reflect", std::function<glm::vec2 (glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b) { return glm::reflect(a,b); } ))
+            // Common functions
+            .addFunction("abs", std::function<float (float)> ( [](float a ) { return glm::abs(a ); }))
+            .addFunction("clamp", std::function<float (float, float, float)> ( [](float a, float b, float c ) { return glm::clamp(a, b, c ); }))
         .endNamespace()
     ;
 

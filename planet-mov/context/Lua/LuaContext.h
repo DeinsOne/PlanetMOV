@@ -5,21 +5,15 @@
 
 extern "C"
 {
-#include "lua.h"
+    #include "lua.h"
 }
 
-namespace LuaContext
-{
+namespace LuaContext {
 
     void _luaBindCore(lua_State *L);
 
     void _luaBindGlm(lua_State *L);
 
-    /**
-     * Binds all predefind items to lua state :
-     *  - _luaBindCore
-     *  - _luaBindGlm
-    */
     void _luaBindAll(lua_State *L);
 
 } // namespace LuaContext
