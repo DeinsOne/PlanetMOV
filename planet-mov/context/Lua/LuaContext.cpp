@@ -35,13 +35,22 @@ void LuaContext::_luaBindCore(lua_State* L ) {
 
 }
 
+glm::vec2 sum(glm::vec2 a, glm::vec2 b) {
+
+}
+
 // TODO:
 void LuaContext::_luaBindGlm(lua_State* L ) {
+
     luabridge::getGlobalNamespace(L)
         .beginClass<glm::vec2>("vec2")
             .addConstructor<void (*)(float, float)>()
-            .addProperty("x", &glm::vec2::x )
-            .addProperty("y", &glm::vec2::y )
+            .addData("x", &glm::vec2::x )
+            .addData("y", &glm::vec2::y )
+            .addFunction("__add", std::function<glm::vec2 (glm::vec2*, glm::vec2)> ( [](glm::vec2* a, glm::vec2 b) { return *a + b; } ) )
+            .addFunction("__sub", std::function<glm::vec2 (glm::vec2*, glm::vec2)> ( [](glm::vec2* a, glm::vec2 b) { return *a - b; } ) )
+            .addFunction("__mul", std::function<glm::vec2 (glm::vec2*, float)> ( [](glm::vec2* a, float b) { return *a * b; } ) )
+            .addFunction("__div", std::function<glm::vec2 (glm::vec2*, float)> ( [](glm::vec2* a, float b) { return *a / b; } ) )
         .endClass()
 
         .beginNamespace("glm")

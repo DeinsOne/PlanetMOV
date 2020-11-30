@@ -1,7 +1,7 @@
-Moon = Planet(vec2(30, 5), 1.3 )
+Moon = Planet(getPlanet('Earth').pos + vec2(9,0), 1.3 )
 
 function onSetup()
-    Moon = Planet(vec2(30, 5), 1.3 )
+    Moon = Planet(getPlanet('Earth').pos + vec2(9,0), 1.3 )
     return Moon
 end
 
