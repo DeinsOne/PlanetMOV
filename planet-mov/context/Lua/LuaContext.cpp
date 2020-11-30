@@ -23,23 +23,17 @@ Planet* getPlanet(std::string name ) {
 
 // TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
-
-
     luabridge::getGlobalNamespace(L)
         .beginClass<Planet>("Planet")
             .addConstructor<void (*)(glm::vec2, float)>()
-
             .addProperty("size", &Planet::_size )
             .addProperty("pos", &Planet::_pos )
-
             .addFunction("printFields", &Planet::printFields )
-            /* ... */
 
         .endClass()
 
         .addFunction("getPlanet", getPlanet )
     ;
-
 
 }
 
@@ -48,14 +42,21 @@ void LuaContext::_luaBindGlm(lua_State* L ) {
     luabridge::getGlobalNamespace(L)
         .beginClass<glm::vec2>("vec2")
             .addConstructor<void (*)(float, float)>()
-
             .addProperty("x", &glm::vec2::x )
             .addProperty("y", &glm::vec2::y )
-
-            /* ... */
-
         .endClass()
+
+        .beginNamespace("glm")
+            .addFunction("cross", std::function<glm::vec2 (glm::vec2)> ( [](glm::vec2 a) { return glm::vec2(a.y, -a.x); } ))
+            .addFunction("distance", std::function<float (glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b) { return glm::distance(a,b); } ))
+            .addFunction("dot", std::function<float (glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b) { return glm::dot(a,b); } ))
+            .addFunction("faceforward", std::function<glm::vec2 (glm::vec2, glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b, glm::vec2 c) { return glm::faceforward(a,b, c); } ))
+            .addFunction("length", std::function<float (glm::vec2)> ( [](glm::vec2 a) { return glm::length(a ); }))
+            .addFunction("normalize", std::function<glm::vec2 (glm::vec2)> ( [](glm::vec2 a) { return glm::normalize(a ); } ))
+            .addFunction("reflect", std::function<glm::vec2 (glm::vec2, glm::vec2)> ( [](glm::vec2 a, glm::vec2 b) { return glm::reflect(a,b); } ))
+        .endNamespace()
     ;
+
 }
 
 
