@@ -3,6 +3,7 @@
 ![](docs/MovIco.svg)
 ![GitHub repo size](https://img.shields.io/github/languages/code-size/DeinsOne/PlanetMOV?style=flat-square&color=red)
 ![Licence](https://img.shields.io/github/license/DeinsOne/PlanetMOV?style=flat-square&color=red)
+![GitHub language count](https://img.shields.io/github/languages/count/DeinsOne/PlanetMOV?style=flat-square&color=red)
 
 PlanetMOV is a lightweight solar system emulator that uses Lua scripts and different shaders instead of control components. Main purpose of project is getting know how to work with Cinder library(Render process and function set), Lua binder, shader languages and program architecture.
 
@@ -20,7 +21,7 @@ Currently supports only Linux.
 - [x] Lua scripting
     - [x] VM binding(binding scripts to plants) 
     - [x] Events(onSetup, onUpdate)
-    - [ ] PlanetMOV Lua set(classes, functions)
+    - [x] PlanetMOV Lua set(classes, functions)
 
 
 More information can be found on [PlanetMOV Trello](https://trello.com/b/55gNFNto)
