@@ -2,6 +2,7 @@ Moon = Planet(getPlanet('Earth').pos + vec2(9,0), 1.3 )
 
 function onSetup()
     Moon = Planet(getPlanet('Earth').pos + vec2(9,0), 1.3 )
+    print('\tMoon.onSetup()')
     return Moon
 end
 

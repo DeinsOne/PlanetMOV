@@ -27,6 +27,8 @@ void LuaContext::_luaBindCore(lua_State* L ) {
             .addProperty("size", &Planet::_size )
             .addProperty("pos", &Planet::_pos )
             .addFunction("printFields", &Planet::printFields )
+            .addFunction("onSetup", &Planet::onSetup )
+            .addFunction("onUpdate", &Planet::onUpdate )
 
         .endClass()
 
@@ -35,9 +37,6 @@ void LuaContext::_luaBindCore(lua_State* L ) {
 
 }
 
-glm::vec2 sum(glm::vec2 a, glm::vec2 b) {
-
-}
 
 // TODO:
 void LuaContext::_luaBindGlm(lua_State* L ) {

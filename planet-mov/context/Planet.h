@@ -21,6 +21,10 @@ class Planet {
 
         void printFields() { printf("pos = { %f, %f }  |  size = %f\n", _pos.x, _pos.y, _size ); }
 
+
+        void onSetup();
+        void onUpdate();
+
 };
 
 
