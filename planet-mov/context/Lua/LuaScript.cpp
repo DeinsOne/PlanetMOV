@@ -55,8 +55,8 @@ Error LuaScript::load(std::string path ) {
 
 
 
-int LuaScript::check() {
-    if (_textSEntt.empty() ) return 0;
+Error LuaScript::check() {
+    if (_textSEntt.empty() ) return Error(ErrorType::Error_None, "", "" );
     std::string _beg = _pathSEntt;
 
     try {
@@ -65,6 +65,7 @@ int LuaScript::check() {
     } catch (std::exception& e ) {
         CI_LOG_EXCEPTION(_pathSEntt, e );
         ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script", e.what()) );
+        return Error(ErrorType::Error_Script, "Script", e.what() );
     }
 
 
@@ -74,8 +75,9 @@ int LuaScript::check() {
     } catch (std::exception& e ) {
         CI_LOG_EXCEPTION(_pathSEntt, e );
         ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script", e.what()) );
+        return Error(ErrorType::Error_Script, "Script", e.what() );
     }
 
 
-    return 0;
+    return Error(ErrorType::Error_None, "", "" );
 }

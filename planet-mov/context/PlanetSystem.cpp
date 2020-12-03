@@ -6,6 +6,7 @@
 #include "jsonConfig.h"
 #include "TimeControl.h"
 #include "CameraControl.h"
+#include "Controller.h"
 
 extern "C" {
     #include "lua.h"
@@ -64,6 +65,9 @@ void PlanetSystem::loadPlanets(std::string _file)
         } 
 
     }
+
+    Controller::Get()._script.load(Json::getValueByLabel(_planetsConfig, Labels_Controller, "" ));
+    Controller::Get().check();
 
 
     // FIXME: Check errors
@@ -180,26 +184,39 @@ void PlanetSystem::eventOnSetup() {
 }
 
 void PlanetSystem::eventOnUpdate() {
-    for (auto i : _planets ) {
-        if (i.second->_script._textSEntt.empty() ) continue;
-
+    if (!Controller::Get().empty() ) {
         try {
-            lua_State* L = i.second->_script._luaState;
-
-            // Bind variables
-            luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
-            luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
-
-            // Call onUpdate
-            i.second->onUpdate();
+            Controller::Get().onUpdate();
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Controller Script: onUpdate", e.what()) );
 
             TimeControl::Get()._play = false;
         }
+    }
+    else {
+        for (auto i : _planets ) {
+            if (i.second->_script._textSEntt.empty() ) continue;
 
+            try {
+                lua_State* L = i.second->_script._luaState;
+
+                // Bind variables
+                luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
+                luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
+
+                // Call onUpdate
+                i.second->onUpdate();
+            }
+            catch (std::exception& e ) {
+                CI_LOG_EXCEPTION("", e);
+                ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+
+                TimeControl::Get()._play = false;
+            }
+
+        }
     }
 
 }
@@ -213,6 +230,7 @@ void Planet::onSetup() {
         if (onSetup.isFunction() ) {
             _pos = static_cast<Planet>(planet)._pos;
             _size = static_cast<Planet>(planet)._size;
+            _mass = static_cast<Planet>(planet)._mass;
         }
     }
     catch (std::exception& e ) {
@@ -229,6 +247,7 @@ void Planet::onUpdate() {
         if (onUpdate.isFunction() ) {
             _pos = static_cast<Planet>(planet)._pos;
             _size = static_cast<Planet>(planet)._size;
+            _mass = static_cast<Planet>(planet)._mass;
         }
     }
     catch (std::exception& e ) {

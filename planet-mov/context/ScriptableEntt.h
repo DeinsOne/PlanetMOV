@@ -18,7 +18,7 @@ class ScriptableEntt {
 
         // Should be overide
         virtual int bind() = 0;
-        virtual int check() = 0;
+        virtual Error check() = 0;
 
         virtual Error load(std::string path ) = 0;
 

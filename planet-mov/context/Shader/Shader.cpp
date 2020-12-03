@@ -44,6 +44,6 @@ Error Shader::load(std::string path ) {
 
 
 
-int Shader::check() {
-    return 0;
+Error Shader::check() {
+    return Error(ErrorType::Error_None, "", "" );
 }
