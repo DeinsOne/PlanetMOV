@@ -26,6 +26,7 @@ void LuaContext::_luaBindCore(lua_State* L ) {
             .addConstructor<void (*)(glm::vec2, float)>()
             .addProperty("size", &Planet::_size )
             .addProperty("pos", &Planet::_pos )
+            .addProperty("mass", &Planet::_mass )
             .addFunction("printFields", &Planet::printFields )
             .addFunction("onSetup", &Planet::onSetup )
             .addFunction("onUpdate", &Planet::onUpdate )
