@@ -16,7 +16,7 @@ class Shader : public ScriptableEntt {
         virtual Error load(std::string path ) override;
 
         virtual int bind() override;
-        virtual int check() override;
+        virtual Error check() override;
 
 
         void bindArgs(float elapsedTime, float deltaTime );

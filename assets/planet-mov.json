@@ -1,32 +1,27 @@
 {
     "version": "1.0.0",
     "planets": {
-        // Planet with name Sun
         "Sun" : {
-            // Planets Radius
             "radius": 7.0,
-            // Planets position
-            "position" : [ 0, 0 ],
+            "pos" : [ 0, 0 ],
 
-            // Path to fragment shader
             "fShader" : "samples/shaders/sunShader.fs.glsl"
         },
 
-
-
         "Earth" : {
             "fShader" : "samples/shaders/earthShader.fs.glsl",
-            // Path to script of Earth planet
             "script" : "samples/scripts/earthScript.lua"
         },
 
         "Moon" : {
-            "fragmentShader" : "samples/shaders/moonShader.fs.glsl",
-            "luaScript" : "samples/scripts/moonScript.lua"
+            "fShader" : "samples/shaders/moonShader.fs.glsl",
+            "script" : "samples/scripts/moonScript.lua"
         }
 
     
-    }
+    },
 
+
+    "controller" : "samples/scripts/controller.lua"
 }
 

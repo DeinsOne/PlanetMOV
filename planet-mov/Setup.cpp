@@ -23,4 +23,6 @@ void PlanetMOV::setup()
     // Initialize PlanetSystem
     PlanetSystem::Get().loadPlanets("assets/planet-mov.json" );
 
+    Controller::Get();
+
 }

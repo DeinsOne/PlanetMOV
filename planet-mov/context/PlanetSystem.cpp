@@ -6,6 +6,7 @@
 #include "jsonConfig.h"
 #include "TimeControl.h"
 #include "CameraControl.h"
+#include "Controller.h"
 
 extern "C" {
     #include "lua.h"
@@ -19,15 +20,6 @@ extern "C" {
 #include "cinder/Log.h"
 
 float lodExponent(float size ) {
-    // float t = pow(size, 2) - (8.3 * size) -1500 + 9.1;
-    // float sqrtD = sqrt(pow(85.0, 2) + (4 * t ));
-
-    // float y1 = (-85 + sqrtD)/2;
-    // float y2 = (-85 - sqrtD)/2;
- 
-    // if (y1 < 0 ) return y2;
-    // else return y1;
-
     return 44;
 }
 
@@ -64,6 +56,9 @@ void PlanetSystem::loadPlanets(std::string _file)
         } 
 
     }
+
+    Controller::Get()._script.load(Json::getValueByLabel(_planetsConfig, Labels_Controller, "" ));
+    Controller::Get().check();
 
 
     // FIXME: Check errors
@@ -174,51 +169,80 @@ void PlanetSystem::eventOnSetup() {
     for (auto i : _planets ) {
         if (i.second->_script._textSEntt.empty() ) continue;
 
-        try {
-            auto onSetup = luabridge::getGlobal(i.second->_script._luaState, Labels[Labels_OnSetup].first );
-            auto planet = onSetup();
-
-            if (onSetup.isFunction() ) {
-                i.second->_pos = static_cast<Planet>(planet)._pos;
-                i.second->_size = static_cast<Planet>(planet)._size;
-            }
-        }
-        catch (std::exception& e ) {
-            CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onSetup", e.what()) );
-        }
-
+        i.second->onSetup();
     }
 
 }
 
 void PlanetSystem::eventOnUpdate() {
-    for (auto i : _planets ) {
-        if (i.second->_script._textSEntt.empty() ) continue;
-
+    if (!Controller::Get().empty() ) {
         try {
-            lua_State* L = i.second->_script._luaState;
-
-            // Bind variables
-            luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
-            luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
-
-            // Call onUpdate
-            auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
-            auto planet = onUpdate();
-
-            if (onUpdate.isFunction() ) {
-                i.second->_pos = static_cast<Planet>(planet)._pos;
-                i.second->_size = static_cast<Planet>(planet)._size;
-            }
+            Controller::Get().onUpdate();
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Controller Script: onUpdate", e.what()) );
 
             TimeControl::Get()._play = false;
         }
+    }
+    else {
+        for (auto i : _planets ) {
+            if (i.second->_script._textSEntt.empty() ) continue;
 
+            try {
+                lua_State* L = i.second->_script._luaState;
+
+                // Bind variables
+                luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
+                luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
+
+                // Call onUpdate
+                i.second->onUpdate();
+            }
+            catch (std::exception& e ) {
+                CI_LOG_EXCEPTION("", e);
+                ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+
+                TimeControl::Get()._play = false;
+            }
+
+        }
     }
 
+}
+
+
+void Planet::onSetup() {
+    try {
+        auto onSetup = luabridge::getGlobal(_script._luaState, Labels[Labels_OnSetup].first );
+        auto planet = onSetup();
+
+        if (onSetup.isFunction() ) {
+            _pos = static_cast<Planet>(planet)._pos;
+            _size = static_cast<Planet>(planet)._size;
+            _mass = static_cast<Planet>(planet)._mass;
+        }
+    }
+    catch (std::exception& e ) {
+        CI_LOG_EXCEPTION("", e);
+        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onSetup", e.what()) );
+    }
+}
+
+void Planet::onUpdate() {
+    try {
+        auto onUpdate = luabridge::getGlobal(_script._luaState, Labels[Labels_OnUpdate].first );
+        auto planet = onUpdate();
+
+        if (onUpdate.isFunction() ) {
+            _pos = static_cast<Planet>(planet)._pos;
+            _size = static_cast<Planet>(planet)._size;
+            _mass = static_cast<Planet>(planet)._mass;
+        }
+    }
+    catch (std::exception& e ) {
+        CI_LOG_EXCEPTION("", e);
+        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+    }
 }

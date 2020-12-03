@@ -12,6 +12,7 @@
 #include "TimeControl.h"
 #include "CameraControl.h"
 #include "PlanetSystem.h"
+#include "Controller.h"
 #include "Error.h"
 
 #include "cinder/CinderImGui.h"
