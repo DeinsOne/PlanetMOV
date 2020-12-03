@@ -10,6 +10,7 @@ extern "C" {
 
 #include "LuaBridge/LuaBridge.h"
 #include "PlanetSystem.h"
+#include "TimeControl.h"
 
 #include "cinder/Log.h"
 
@@ -36,6 +37,10 @@ bool Controller::empty() {
 
 void Controller::onUpdate() {
     auto onUpdate = luabridge::getGlobal(_script._luaState, Labels[Labels_OnUpdate].first );
+
+    luabridge::setGlobal<float>(_script._luaState, TimeControl::Get().getDeltaTime(), "deltaTime" );
+    luabridge::setGlobal<float>(_script._luaState, TimeControl::Get()._elapsedTime, "elapsedTime" );
+
     auto planets = onUpdate();
 
     if (planets.isTable() ) {
