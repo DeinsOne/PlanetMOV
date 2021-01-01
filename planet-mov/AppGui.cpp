@@ -190,8 +190,8 @@ void PlanetMOV::drawTools() {
                             ImGui::LabelText(i.c_str(), "%s", PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].asCString() );
                         else if (PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].isArray() )
                             ImGui::LabelText(i.c_str(), "%.3f | %.3f",
-                                PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()][0],
-                                PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()][1]
+                                PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()][0].asFloat(),
+                                PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()][1].asFloat()
                             );
 
                     }

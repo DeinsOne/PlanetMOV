@@ -18,10 +18,10 @@ class Planet {
         Planet() { }
 
 
-        static void transferArgs(Planet* p, Json::Value& value); // Fills p->_args with value
-        static void encodeArgs(Planet* p, luabridge::LuaRef table);
+        static void _transferArgs(Planet* p, Json::Value& value); // Fills p->_args with value
+        static void _encodeArgs(Planet* p, luabridge::LuaRef table);
 
-        static luabridge::LuaRef bindTable(Planet* p ); // Creates and returns lua table
+        static luabridge::LuaRef _bindTable(Planet* p ); // Creates and returns lua table
 
 };
 

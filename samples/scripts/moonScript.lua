@@ -1,16 +1,14 @@
-Moon = Planet(getPlanet('Earth').pos + vec2(9,0), 1.3 )
-
-function onSetup()
-    Moon = Planet(getPlanet('Earth').pos + vec2(9,0), 1.3 )
-    return Moon
+-- Moon
+function onSetup(argv)
+    return { pos = vec2(35, 0), argv }
 end
 
 
 
 function onUpdate()
-    EarthPos = getPlanet('Earth').pos
+    Moon = getPlanet('Moon')
+    -- Earth = getPlanet('Earth')
+    -- print(Earth.EarthS)
 
-    MoonS = 9
-    Moon.pos = vec2(EarthPos.x + (math.sin(elapsedTime*2) * MoonS), EarthPos.y + (math.cos(elapsedTime*2) * MoonS)  )
-    return Moon
+    return { Moon }
 end

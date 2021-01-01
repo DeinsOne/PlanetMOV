@@ -16,6 +16,14 @@
 
             "velocity" : 1.0,
             "EarthS" : 26.0
+        },
+
+        "Moon" : {
+            "fShader" : "samples/shaders/moonShader.fs.glsl",
+            "script" : "samples/scripts/moonScript.lua",
+
+            "size" : 1.3,
+            "MoonS" : 9
         }
     }
 
