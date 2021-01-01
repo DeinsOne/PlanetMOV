@@ -11,12 +11,9 @@ extern "C" {
 
 #include "PlanetSystem.h"
 
-Planet* getPlanet(std::string name ) {
-    auto it = PlanetSystem::Get()._planets.find(name);
-    if (it->second )
-        return PlanetSystem::Get()._planets[name].get();
-    else
-        return nullptr;
+luabridge::LuaRef getPlanet(std::string name ) {
+    auto it = Planet::bindTable(PlanetSystem::Get()._planets.find(name)->second.get() );
+    return it;
 }
 
 luabridge::LuaRef getPlanets(lua_State* L ) {
@@ -24,9 +21,7 @@ luabridge::LuaRef getPlanets(lua_State* L ) {
 
     std::map<std::string, std::shared_ptr<Planet>>::iterator iter;
     for (iter = PlanetSystem::Get()._planets.begin(); iter != PlanetSystem::Get()._planets.end(); iter++) {
-        std::string id = iter->first;
-        Planet* planet = iter->second.get();
-        planets[id] = planet;
+        planets[iter->first] = getPlanet(iter->first);
     }
 
     return planets;
@@ -35,23 +30,12 @@ luabridge::LuaRef getPlanets(lua_State* L ) {
 // TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
     luabridge::getGlobalNamespace(L)
-        .beginClass<Planet>("Planet")
-            .addConstructor<void (*)(glm::vec2, float)>()
-            .addProperty("size", &Planet::_size )
-            .addProperty("pos", &Planet::_pos )
-            .addFunction("printFields", &Planet::printFields )
-
-        .endClass()
-
         .addFunction("getPlanet", getPlanet )
         .addFunction("getPlanets", getPlanets )
     ;
 
 }
 
-glm::vec2 sum(glm::vec2 a, glm::vec2 b) {
-
-}
 
 // TODO:
 void LuaContext::_luaBindGlm(lua_State* L ) {

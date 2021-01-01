@@ -1,16 +1,22 @@
-Earth = Planet(vec2(26, 0), 2.4 )
-
+-- Earth
 function onSetup(argv)
-    Earth = Planet(argv['position'], argv['size'] )
-    return Earth
+    return {
+        pos = vec2(argv.EarthS, 0),
+        size = 2.4,
+        argv
+    }
 end
 
 
 
 function onUpdate()
-    SunPos = getPlanet('Sun').pos
+    SunPos = vec2(0,0)
+    Earth = getPlanet('Earth')
 
-    EarthS = 26
-    Earth.pos = vec2(SunPos.x - math.sin(elapsedTime/3) * EarthS, SunPos.y + math.cos(elapsedTime/3) * EarthS )
+    Earth.pos = vec2(
+        SunPos.x - (math.sin(elapsedTime/3) * Earth.EarthS * Earth.velocity),
+        SunPos.y + (math.cos(elapsedTime/3) * Earth.EarthS * Earth.velocity)
+    )
+
     return Earth
 end

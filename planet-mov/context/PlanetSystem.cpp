@@ -7,19 +7,9 @@
 #include "TimeControl.h"
 #include "CameraControl.h"
 
-extern "C" {
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-    #include "luaconf.h"
-}
-
-#include "LuaBridge/LuaBridge.h"
+#include "LuaContext.h"
 
 #include "cinder/Log.h"
-
-static void transferArgs(Planet* p, Json::Value& value); // Fills p->_args with value
-static luabridge::LuaRef bindTable(Planet* p ); // Creates and returns lua table
 
 
 float lodExponent(float size ) {
@@ -42,24 +32,23 @@ void PlanetSystem::loadPlanets(std::string _file)
     }
 
     for (auto i : _planetsConfig["planets"].getMemberNames() ) {
-        float           _size = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Radius, 0.0f);
-        glm::vec2       _pos = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Pos, glm::vec2(0.0f, 0.0f));
         std::string     _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/default.fs.glsl");
+        std::string     _script = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "");
 
 
         if (!i.empty() ) {
-            _planets[i] = std::make_shared<Planet>(_pos, _size);
+            _planets[i] = std::make_shared<Planet>();
 
             // Load shader
             auto er = _planets[i]->_shader.load(_fShader );
             ErrorHandler::Get().push(er );
 
             // Load script
-            auto er1 = _planets[i]->_script.load(Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "") );
+            auto er1 = _planets[i]->_script.load(_script );
             ErrorHandler::Get().push(er1 );
 
             // Transfer arguments to planet 
-            transferArgs(_planets[i].get(), _planetsConfig["planets"][i] );
+            Planet::transferArgs(_planets[i].get(), _planetsConfig["planets"][i] );
         }
 
     }
@@ -75,11 +64,11 @@ void PlanetSystem::loadPlanets(std::string _file)
     eventOnSetup();
 }
 
-static void transferArgs(Planet* p, Json::Value& value) {
+void Planet::transferArgs(Planet* p, Json::Value& value) {
     p->_args = value;
 }
 
-static luabridge::LuaRef bindTable(Planet* p ) {
+luabridge::LuaRef Planet::bindTable(Planet* p ) {
     luabridge::LuaRef _args = luabridge::newTable(p->_script._luaState );
 
     for (auto c : p->_args.getMemberNames()) {
@@ -116,6 +105,33 @@ static luabridge::LuaRef bindTable(Planet* p ) {
     }
 
     return _args;
+}
+
+void Planet::encodeArgs(Planet* p, luabridge::LuaRef table) {
+    table.push(p->_script._luaState);
+    luabridge::push(p->_script._luaState, luabridge::Nil());
+    while (lua_next (p->_script._luaState, -2)) {
+        luabridge::LuaRef key = luabridge::LuaRef::fromStack(p->_script._luaState, -2);
+        luabridge::LuaRef val = luabridge::LuaRef::fromStack(p->_script._luaState, -1);
+        
+        if (val.isBool())
+            p->_args[key.tostring().c_str()] = val.cast<bool>();
+        else if (val.isNumber())
+            p->_args[key.tostring().c_str()] = val.cast<float>();
+        else if (val.isString())
+            p->_args[key.tostring().c_str()] = val.cast<const char*>();
+        else if (val.isInstance<glm::vec2>()) {
+            glm::vec2 vector = val.cast<glm::vec2>();
+            p->_args[key.tostring().c_str()][0] = vector.x;
+            p->_args[key.tostring().c_str()][1] = vector.y;
+        }
+        else if (val.length() > 0 ) {            
+            for (int i = 0; i < val.length(); i++ )
+                p->_args[key.tostring().c_str()][i] = val.cast<float>();
+        }
+
+        lua_pop(p->_script._luaState, 1);
+    }
 }
 
 void PlanetSystem::update()
@@ -220,12 +236,9 @@ void PlanetSystem::eventOnSetup() {
 
         try {
             auto onSetup = luabridge::getGlobal(i.second->_script._luaState, Labels[Labels_OnSetup].first );
-            auto planet = onSetup(bindTable(i.second.get()) );
+            auto planet = onSetup(Planet::bindTable(i.second.get()) );
 
-            if (onSetup.isFunction() ) {
-                i.second->_pos = static_cast<Planet>(planet)._pos;
-                i.second->_size = static_cast<Planet>(planet)._size;
-            }
+            Planet::encodeArgs(i.second.get(), planet);
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
@@ -237,32 +250,29 @@ void PlanetSystem::eventOnSetup() {
 }
 
 void PlanetSystem::eventOnUpdate() {
-    // for (auto i : _planets ) {
-    //     if (i.second->_script._textSEntt.empty() ) continue;
+    for (auto i : _planets ) {
+        if (i.second->_script._textSEntt.empty() ) continue;
 
-    //     try {
-    //         lua_State* L = i.second->_script._luaState;
+        try {
+            lua_State* L = i.second->_script._luaState;
 
-    //         // Bind variables
-    //         luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
-    //         luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
+            // Bind variables
+            luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
+            luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
 
-    //         // Call onUpdate
-    //         auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
-    //         auto planet = onUpdate();
+            // Call onUpdate
+            auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
+            auto planet = onUpdate();
 
-    //         if (onUpdate.isFunction() ) {
-    //             i.second->_pos = static_cast<Planet>(planet)._pos;
-    //             i.second->_size = static_cast<Planet>(planet)._size;
-    //         }
-    //     }
-    //     catch (std::exception& e ) {
-    //         CI_LOG_EXCEPTION("", e);
-    //         ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+            Planet::encodeArgs(i.second.get(), planet);
+        }
+        catch (std::exception& e ) {
+            CI_LOG_EXCEPTION("", e);
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
 
-    //         TimeControl::Get()._play = false;
-    //     }
+            TimeControl::Get()._play = false;
+        }
 
-    // }
+    }
 
 }

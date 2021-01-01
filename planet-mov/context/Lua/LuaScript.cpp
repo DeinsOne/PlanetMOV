@@ -1,12 +1,6 @@
-extern "C" {
-    #include "lualib.h"
-    #include "lauxlib.h"
-    #include "luaconf.h"
-}
-
 #include "LuaScript.h"
 #include "LuaContext.h"
-#include "LuaBridge/LuaBridge.h"
+
 #include "labels.h"
 
 #include "cinder/Log.h"

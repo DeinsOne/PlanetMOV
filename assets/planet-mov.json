@@ -2,8 +2,8 @@
     "version": "1.0.0",
     "planets": {
         "Sun" : {
-            "radius": 7.0,
-            "position" : [ 0, 0 ],
+            "size": 7.0,
+            "pos" : [ 0, 0 ],
 
             "fShader" : "samples/shaders/sunShader.fs.glsl"
         },
@@ -14,11 +14,8 @@
             "fShader" : "samples/shaders/earthShader.fs.glsl",
             "script" : "samples/scripts/earthScript.lua",
 
-            "size" : 2.4,
-            "position" : [26,0],
-
-            "j1k24nelqk411io24" : "214rQWK ;O3NOI; gDFML;Q"
-
+            "velocity" : 1.0,
+            "EarthS" : 26.0
         }
     }
 

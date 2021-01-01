@@ -10,19 +10,18 @@
 
 class Planet {
     public :
-        glm::vec2               _pos;
-        float                   _size;
-
         Shader                  _shader;
         LuaScript               _script;
 
         Json::Value             _args;
 
-        Planet(glm::vec2 pos, float size) : _pos(pos), _size(size) {
-        }
+        Planet() { }
 
 
-        void printFields() { printf("pos = { %f, %f }  |  size = %f\n", _pos.x, _pos.y, _size ); }
+        static void transferArgs(Planet* p, Json::Value& value); // Fills p->_args with value
+        static void encodeArgs(Planet* p, luabridge::LuaRef table);
+
+        static luabridge::LuaRef bindTable(Planet* p ); // Creates and returns lua table
 
 };
 
