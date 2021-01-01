@@ -181,6 +181,28 @@ void PlanetMOV::drawTools() {
                     ImGui::LabelText("Radius", "%.3f", PlanetSystem::Get().getSelectedPlanet()->_size );
                     ImGui::LabelText("Pos", "%.2f | %.2f", PlanetSystem::Get().getSelectedPlanet()->_pos.x, PlanetSystem::Get().getSelectedPlanet()->_pos.y );
 
+                    // if (PlanetSystem::Get().getSelectedPlanet()->_args.size()) {
+                    //     ImGui::Spacing();
+                    //     ImGui::Separator();
+                    // }
+
+                    // for (auto i : PlanetSystem::Get().getSelectedPlanet()->_args.getMemberNames() ) {
+                    //     if (PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].isInt() )
+                    //         ImGui::LabelText(i.c_str(), "%i", PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].asInt() );
+                    //     else if (PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].isDouble() )
+                    //         ImGui::LabelText(i.c_str(), "%.3f", PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].asFloat() );
+                    //     else if (PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].isBool() )
+                    //         ImGui::LabelText(i.c_str(), "%i", PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].asBool() );
+                    //     else if (PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].isString() )
+                    //         ImGui::LabelText(i.c_str(), "%s", PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].asCString() );
+                    //     else if (PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()].isArray() )
+                    //         ImGui::LabelText(i.c_str(), "%.3f | %.3f",
+                    //             PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()][0],
+                    //             PlanetSystem::Get().getSelectedPlanet()->_args[i.c_str()][1]
+                    //         );
+
+                    // }
+
                     ImGui::TreePop();
                 }
 

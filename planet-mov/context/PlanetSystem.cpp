@@ -18,16 +18,11 @@ extern "C" {
 
 #include "cinder/Log.h"
 
+static void transferArgs(Planet* p, Json::Value& value); // Fills p->_args with value
+static luabridge::LuaRef bindTable(Planet* p ); // Creates and returns lua table
+
+
 float lodExponent(float size ) {
-    // float t = pow(size, 2) - (8.3 * size) -1500 + 9.1;
-    // float sqrtD = sqrt(pow(85.0, 2) + (4 * t ));
-
-    // float y1 = (-85 + sqrtD)/2;
-    // float y2 = (-85 - sqrtD)/2;
- 
-    // if (y1 < 0 ) return y2;
-    // else return y1;
-
     return 44;
 }
 
@@ -43,6 +38,7 @@ void PlanetSystem::loadPlanets(std::string _file)
     catch (std::exception& e) {
         CI_LOG_EXCEPTION("", e );
         ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config not found", e.what()) );
+        return;
     }
 
     for (auto i : _planetsConfig["planets"].getMemberNames() ) {
@@ -61,7 +57,10 @@ void PlanetSystem::loadPlanets(std::string _file)
             // Load script
             auto er1 = _planets[i]->_script.load(Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "") );
             ErrorHandler::Get().push(er1 );
-        } 
+
+            // Transfer arguments to planet 
+            transferArgs(_planets[i].get(), _planetsConfig["planets"][i] );
+        }
 
     }
 
@@ -74,6 +73,49 @@ void PlanetSystem::loadPlanets(std::string _file)
 
 
     eventOnSetup();
+}
+
+static void transferArgs(Planet* p, Json::Value& value) {
+    p->_args = value;
+}
+
+static luabridge::LuaRef bindTable(Planet* p ) {
+    luabridge::LuaRef _args = luabridge::newTable(p->_script._luaState );
+
+    for (auto c : p->_args.getMemberNames()) {
+        if (p->_args[c.c_str()].isBool())
+            _args[c.c_str()] = p->_args[c.c_str()].asBool();
+        else if (p->_args[c.c_str()].isDouble())
+            _args[c.c_str()] = p->_args[c.c_str()].asFloat();
+        else if (p->_args[c.c_str()].isInt())
+            _args[c.c_str()] = p->_args[c.c_str()].asInt();
+        else if (p->_args[c.c_str()].isString())
+            _args[c.c_str()] = p->_args[c.c_str()].asCString();
+        else if (p->_args[c.c_str()].isArray()) {
+            if (p->_args[c.c_str()].size() > 2) {
+                _args[c.c_str()] = luabridge::newTable(p->_script._luaState);
+
+                if (p->_args[c.c_str()][0].isInt()) {
+                    for (int k = 0; k < p->_args[c.c_str()].size(); k++ )
+                        _args[c.c_str()][k] = p->_args[c.c_str()][k].asInt();
+                }
+                else if (p->_args[c.c_str()][0].isDouble()) {
+                    for (int k = 0; k < p->_args[c.c_str()].size(); k++ )
+                        _args[c.c_str()][k] = p->_args[c.c_str()][k].asFloat();
+                }
+            }
+            else {
+                if (p->_args[c.c_str()][0].isInt()) {
+                    _args[c.c_str()] = glm::vec2(p->_args[c.c_str()][0].asInt(), p->_args[c.c_str()][1].asInt());
+                }
+                else if (p->_args[c.c_str()][0].isDouble()) {
+                    _args[c.c_str()] = glm::vec2(p->_args[c.c_str()][0].asFloat(), p->_args[c.c_str()][1].asFloat());
+                }
+            }
+        }
+    }
+
+    return _args;
 }
 
 void PlanetSystem::update()
@@ -115,24 +157,26 @@ void PlanetSystem::draw()
 {
     for (auto planet : _planets)
     {
-        ci::gl::setModelMatrix(ci::translate(glm::vec3(planet.second->_pos, 0.0)));
+        ci::gl::setModelMatrix(ci::translate(glm::vec3(Json::getValueByLabel(planet.second->_args, Labels_Pos, glm::vec2(0,0)), 0.0)));
 
         if (_selectedPlanet == planet.first)
         {
             ci::gl::getStockShader(ci::gl::ShaderDef().color())->bind();
             ci::gl::color(ci::Color::hex(_colorOfBorder));
-            ci::gl::drawSolidCircle({}, planet.second->_size + _radiusOfBorder, planet.second->_size * 12);
+            ci::gl::drawSolidCircle({}, 
+                Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f) + _radiusOfBorder, Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f) * 12
+            );
         }
 
         if (planet.second->_shader._shader ) {
             planet.second->_shader._shader->bind();
             planet.second->_shader.bindArgs(TimeControl::Get()._elapsedTime, TimeControl::Get().getDeltaTime() );
-            planet.second->_shader._shader->uniform("planetRadius", planet.second->_size );
+            planet.second->_shader._shader->uniform("planetRadius", Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f));
         }
         else
             ci::gl::color(ci::Color::hex(0xeeeeee));
 
-        ci::gl::drawSolidCircle({}, planet.second->_size, lodExponent(planet.second->_size) );
+        ci::gl::drawSolidCircle({}, Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f), lodExponent(Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f)) );
     }
 
     // Draw separeate fbo to give possibility planet picking
@@ -143,11 +187,11 @@ void PlanetSystem::draw()
     auto planet = _planets.begin();
     for (int i = 0; i < _planets.size(); i++)
     {
-        ci::gl::setModelMatrix(ci::translate(glm::vec3(planet->second->_pos, 0.0)));
+        ci::gl::setModelMatrix(ci::translate(glm::vec3(Json::getValueByLabel(planet->second->_args, Labels_Pos, glm::vec2(0,0)), 0.0)));
 
         ci::gl::getStockShader(ci::gl::ShaderDef().color())->bind();
         ci::gl::color(0, ((float)(i + 1)) / ((float)_planets.size()), 0, 1);
-        ci::gl::drawSolidCircle({}, planet->second->_size, planet->second->_size * 12);
+        ci::gl::drawSolidCircle({}, Json::getValueByLabel(planet->second->_args, Labels_Radius, 1.0f), Json::getValueByLabel(planet->second->_args, Labels_Radius, 1.0f) * 12);
         planet++;
     }
 
@@ -176,7 +220,7 @@ void PlanetSystem::eventOnSetup() {
 
         try {
             auto onSetup = luabridge::getGlobal(i.second->_script._luaState, Labels[Labels_OnSetup].first );
-            auto planet = onSetup();
+            auto planet = onSetup(bindTable(i.second.get()) );
 
             if (onSetup.isFunction() ) {
                 i.second->_pos = static_cast<Planet>(planet)._pos;
@@ -193,32 +237,32 @@ void PlanetSystem::eventOnSetup() {
 }
 
 void PlanetSystem::eventOnUpdate() {
-    for (auto i : _planets ) {
-        if (i.second->_script._textSEntt.empty() ) continue;
+    // for (auto i : _planets ) {
+    //     if (i.second->_script._textSEntt.empty() ) continue;
 
-        try {
-            lua_State* L = i.second->_script._luaState;
+    //     try {
+    //         lua_State* L = i.second->_script._luaState;
 
-            // Bind variables
-            luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
-            luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
+    //         // Bind variables
+    //         luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
+    //         luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
 
-            // Call onUpdate
-            auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
-            auto planet = onUpdate();
+    //         // Call onUpdate
+    //         auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
+    //         auto planet = onUpdate();
 
-            if (onUpdate.isFunction() ) {
-                i.second->_pos = static_cast<Planet>(planet)._pos;
-                i.second->_size = static_cast<Planet>(planet)._size;
-            }
-        }
-        catch (std::exception& e ) {
-            CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+    //         if (onUpdate.isFunction() ) {
+    //             i.second->_pos = static_cast<Planet>(planet)._pos;
+    //             i.second->_size = static_cast<Planet>(planet)._size;
+    //         }
+    //     }
+    //     catch (std::exception& e ) {
+    //         CI_LOG_EXCEPTION("", e);
+    //         ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
 
-            TimeControl::Get()._play = false;
-        }
+    //         TimeControl::Get()._play = false;
+    //     }
 
-    }
+    // }
 
 }

@@ -19,6 +19,19 @@ Planet* getPlanet(std::string name ) {
         return nullptr;
 }
 
+luabridge::LuaRef getPlanets(lua_State* L ) {
+    luabridge::LuaRef planets = luabridge::newTable(L );
+
+    std::map<std::string, std::shared_ptr<Planet>>::iterator iter;
+    for (iter = PlanetSystem::Get()._planets.begin(); iter != PlanetSystem::Get()._planets.end(); iter++) {
+        std::string id = iter->first;
+        Planet* planet = iter->second.get();
+        planets[id] = planet;
+    }
+
+    return planets;
+}
+
 // TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
     luabridge::getGlobalNamespace(L)
@@ -31,6 +44,7 @@ void LuaContext::_luaBindCore(lua_State* L ) {
         .endClass()
 
         .addFunction("getPlanet", getPlanet )
+        .addFunction("getPlanets", getPlanets )
     ;
 
 }

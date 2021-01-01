@@ -6,6 +6,8 @@
 #include "LuaScript.h"
 #include "Shader.h"
 
+#include "jsonConfig.h"
+
 class Planet {
     public :
         glm::vec2               _pos;
@@ -14,6 +16,7 @@ class Planet {
         Shader                  _shader;
         LuaScript               _script;
 
+        Json::Value             _args;
 
         Planet(glm::vec2 pos, float size) : _pos(pos), _size(size) {
         }

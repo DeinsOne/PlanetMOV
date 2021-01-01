@@ -82,6 +82,46 @@ namespace Json {
 
     // glm::vec4
     glm::vec4       getValueByLabel(Json::Value& source, Labels_ label, glm::vec4 defaultValue = {0,0,0,0} );
+
+
+
+
+
+
+    /* Getting valuse by str */
+
+    // Boolean
+    bool            getValueByStr(Json::Value& source, const char* label, bool defaultValue = false );            
+
+    // Intager
+    int             getValueByStr(Json::Value& source, const char* label, int defaultValue = 0 );
+
+    // Float
+    float           getValueByStr(Json::Value& source, const char* label, float defaultValue = 0.0f );
+
+    // Double
+    double          getValueByStr(Json::Value& source, const char* label, double defaultValue = 0.0 );
+
+
+    /* Conversion to array values */
+
+    // CString
+    const char*     getValueByStr(Json::Value& source, const char* label, const char* defaultValue = "" );
+
+    // String
+    std::string     getValueByStr(Json::Value& source, const char* label, std::string defaultValue = "" );
+
+
+    /* Vectors */
+
+    // glm::vec2
+    glm::vec2       getValueByStr(Json::Value& source, const char* label, glm::vec2 defaultValue = {0,0} );
+
+    // glm::vec3
+    glm::vec3       getValueByStr(Json::Value& source, const char* label, glm::vec3 defaultValue = {0,0,0} );
+
+    // glm::vec4
+    glm::vec4       getValueByStr(Json::Value& source, const char* label, glm::vec4 defaultValue = {0,0,0,0} );
 }
 
 
