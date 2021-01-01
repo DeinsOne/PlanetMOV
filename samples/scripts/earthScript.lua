@@ -5,14 +5,12 @@ end
 
 
 
-function onUpdate()
-    SunPos = vec2(0,0)
+function onUpdate(planets)
     Earth = getPlanet('Earth')
-    print(Earth.EarthS)
 
     pos = vec2(
-        SunPos.x - (math.sin(elapsedTime/3) * Earth.EarthS * Earth.velocity),
-        SunPos.y + (math.cos(elapsedTime/3) * Earth.EarthS * Earth.velocity)
+        planets.Sun.pos.x - (math.sin(elapsedTime/3) * Earth.EarthS),
+        planets.Sun.pos.y + (math.cos(elapsedTime/3) * Earth.EarthS)
     )
 
     return { pos = pos }

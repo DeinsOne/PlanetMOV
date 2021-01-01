@@ -6,8 +6,8 @@ void Planet::_transferArgs(Planet* p, Json::Value& value) {
     p->_args = value;
 }
 
-luabridge::LuaRef Planet::_bindTable(Planet* p ) {
-    luabridge::LuaRef _args = luabridge::newTable(p->_script._luaState );
+luabridge::LuaRef Planet::_bindTable(Planet* p, lua_State* L ) {
+    luabridge::LuaRef _args = luabridge::newTable(L );
 
     for (auto c : p->_args.getMemberNames()) {
         if (p->_args[c.c_str()].isBool())
@@ -20,7 +20,7 @@ luabridge::LuaRef Planet::_bindTable(Planet* p ) {
             _args[c.c_str()] = p->_args[c.c_str()].asCString();
         else if (p->_args[c.c_str()].isArray()) {
             if (p->_args[c.c_str()].size() > 2) {
-                _args[c.c_str()] = _args.newTable(p->_script._luaState);
+                _args[c.c_str()] = _args.newTable(L);
                 // luabridge::newTable(p->_script._luaState);
 
                 if (p->_args[c.c_str()][0].isInt()) {

@@ -166,7 +166,7 @@ void PlanetSystem::eventOnSetup() {
 
         try {
             auto onSetup = luabridge::getGlobal(i.second->_script._luaState, Labels[Labels_OnSetup].first );
-            auto planet = onSetup(Planet::_bindTable(i.second.get()) );
+            auto planet = onSetup(Planet::_bindTable(i.second.get(), i.second->_script._luaState) );
 
             Planet::_encodeArgs(i.second.get(), planet);
         }
@@ -190,9 +190,16 @@ void PlanetSystem::eventOnUpdate() {
             luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
             luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
 
+            // Pass planets list
+            auto planets = luabridge::newTable(L);
+
+            for (auto c : _planets ) {
+                planets[c.first.c_str()] = Planet::_bindTable(c.second.get(), L);
+            }
+
             // Call onUpdate
             auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
-            auto planet = onUpdate();
+            auto planet = onUpdate(planets);
 
             Planet::_encodeArgs(i.second.get(), planet);
         }

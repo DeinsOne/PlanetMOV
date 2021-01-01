@@ -13,51 +13,17 @@ extern "C" {
 #include "TimeControl.h"
 
 luabridge::LuaRef getPlanet(std::string name ) {
-    // printf("call: getPlanet(");
-
     auto _pl = PlanetSystem::Get()._planets.find(name);
-    // auto table = Planet::_bindTable(_pl->second.get());
-    // printf("%s)\n", _pl->first.c_str());
-    auto table = luabridge::newTable(_pl->second->_script._luaState);
-    if (name == "Sun") {
-        table["pos"] = glm::vec2(0,0);
-        table["size"] = 7.0f;
-        table["fShader"] = "samples/shaders/sunShader.fs.glsl";
-    }
-    else if (name == "Earth") {
-        table["script"] = "samples/scripts/earthScript.lua";
-        table["fShader"] = "samples/shaders/earthShader.fs.glsl";
-        table["EarthS"] = 26.0f;
-        table["velocity"] = 1.0f;
-    }
-    else if (name == "Moon") {
-        table["size"] = 1.3f;
-        table["script"] = "samples/scripts/moonScript.lua";
-        table["fShader"] = "samples/shaders/moonShader.fs.glsl";
-        table["MoonS"] = 9.0f;
-    }
+    auto table = Planet::_bindTable(_pl->second.get(), _pl->second->_script._luaState);
+
+    // printf("call: getPlanet(%s)\n", _pl->first.c_str());
 
     return table;
 }
 
-// luabridge::LuaRef getPlanets(lua_State* L ) {
-//     luabridge::LuaRef planets = luabridge::newTable(L );
-//     printf("call: getPlanets() {");
-
-//     for (auto i : PlanetSystem::Get()._planets ) {
-//         printf(" %s,", i.first.c_str());
-//         planets[i.first.c_str()] = getPlanet(i.first);
-//     }
-
-//     printf(" }\n");
-//     return planets;
-// }
-
-// TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
     luabridge::getGlobalNamespace(L)
         .addFunction("getPlanet", getPlanet )
-        // .addFunction("getPlanets", getPlanets )
     ;
 
 }
