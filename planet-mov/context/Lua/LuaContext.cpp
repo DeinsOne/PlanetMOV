@@ -14,11 +14,13 @@ extern "C" {
 
 luabridge::LuaRef getPlanet(std::string name ) {
     auto _pl = PlanetSystem::Get()._planets.find(name);
-    auto table = Planet::_bindTable(_pl->second.get(), _pl->second->_script._luaState);
+    if (_pl->second) {
+        auto table = Planet::_bindTable(_pl->second.get(), _pl->second->_script._luaState);
+        // printf("call: getPlanet(%s)\n", _pl->first.c_str());
 
-    // printf("call: getPlanet(%s)\n", _pl->first.c_str());
-
-    return table;
+        return table;
+    }
+    else return NULL;
 }
 
 void LuaContext::_luaBindCore(lua_State* L ) {
