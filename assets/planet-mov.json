@@ -1,11 +1,10 @@
 {
     "version": "1.0.0",
-    // "controller" : "samples/scripts/controller.lua",
+    "controller" : "samples/scripts/controller.lua",
     "planets": {
         "Sun" : {
             "size": 7.0,
-            "pos" : [ 0, 0 ],
-
+            "pos" : [0,0],
             "fShader" : "samples/shaders/sunShader.fs.glsl"
         },
 

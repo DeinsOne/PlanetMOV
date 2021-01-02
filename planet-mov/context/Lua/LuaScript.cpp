@@ -1,5 +1,6 @@
 #include "LuaScript.h"
 #include "LuaContext.h"
+#include "Controller.h"
 
 #include "labels.h"
 
@@ -62,12 +63,14 @@ int LuaScript::check() {
     }
 
 
-    try {
-        auto onUpdate = luabridge::getGlobal(_luaState, Labels[Labels_OnUpdate].first );
-        if (!onUpdate.isFunction() ) throw std::runtime_error(_beg + std::string(": onUpdate is not a function") );
-    } catch (std::exception& e ) {
-        CI_LOG_EXCEPTION(_pathSEntt, e );
-        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script", e.what()) );
+    if (Controller::Get()._script._textSEntt.empty() || !luabridge::getGlobal(Controller::Get()._script._luaState, Labels[Labels_OnUpdate].first).isFunction()) {
+        try {
+            auto onUpdate = luabridge::getGlobal(_luaState, Labels[Labels_OnUpdate].first );
+            if (!onUpdate.isFunction() ) throw std::runtime_error(_beg + std::string(": onUpdate is not a function") );
+        } catch (std::exception& e ) {
+            CI_LOG_EXCEPTION(_pathSEntt, e );
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script", e.what()) );
+        }
     }
 
 
