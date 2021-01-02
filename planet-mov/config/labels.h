@@ -15,6 +15,7 @@ enum Labels_ {
     Labels_FShader,
 
     Labels_Script,
+    Labels_Controller,
 
     Labels_OnSetup,
     Labels_OnUpdate
@@ -35,6 +36,8 @@ static std::vector<std::pair<const char*, const char*> > Labels = std::initializ
     { "fragmentShader", "fShader" },                // _Labels_FShader
 
     { "script", "luaScript" },                      // Labels_Script
+
+    { "controller", "" },                      // Labels_Controller
 
     // Function names
     { "onSetup", "" },                              // Labels_OnSetup

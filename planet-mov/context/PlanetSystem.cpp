@@ -10,7 +10,7 @@
 #include "LuaContext.h"
 
 #include "cinder/Log.h"
-
+#include "Controller.h"
 
 float lodExponent(float size ) {
     return 44;
@@ -41,11 +41,11 @@ void PlanetSystem::loadPlanets(std::string _file)
 
             // Load shader
             auto er = _planets[i]->_shader.load(_fShader );
-            ErrorHandler::Get().push(er );
+            ErrorHandler::Get().push(er);
 
             // Load script
             auto er1 = _planets[i]->_script.load(_script );
-            ErrorHandler::Get().push(er1 );
+            ErrorHandler::Get().push(er1);
 
             // Transfer arguments to planet 
             Planet::_transferArgs(_planets[i].get(), _planetsConfig["planets"][i] );
@@ -53,6 +53,13 @@ void PlanetSystem::loadPlanets(std::string _file)
 
     }
 
+    if (_planetsConfig[Labels[Labels_Controller].first].isString() ) {
+        auto er = Controller::Get()._script.load(_planetsConfig[Labels[Labels_Controller].first].asString());
+        ErrorHandler::Get().push(er);
+
+        Controller::Get()._script.check();
+    }
+    
 
     // FIXME: Check errors
     for (auto i : _planets ) {
@@ -168,7 +175,7 @@ void PlanetSystem::eventOnSetup() {
             auto onSetup = luabridge::getGlobal(i.second->_script._luaState, Labels[Labels_OnSetup].first );
             auto planet = onSetup(Planet::_bindTable(i.second.get(), i.second->_script._luaState) );
 
-            Planet::_encodeArgs(i.second.get(), planet);
+            Planet::_encodeArgs(i.second.get(), &planet);
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
@@ -180,6 +187,11 @@ void PlanetSystem::eventOnSetup() {
 }
 
 void PlanetSystem::eventOnUpdate() {
+    if (luabridge::getGlobal(Controller::Get()._script._luaState, Labels[Labels_OnUpdate].first).isFunction()) {
+        Controller::Get().onUpdate();
+        return;
+    }
+
     for (auto i : _planets ) {
         if (i.second->_script._textSEntt.empty() ) continue;
 
@@ -192,7 +204,6 @@ void PlanetSystem::eventOnUpdate() {
 
             // Pass planets list
             auto planets = luabridge::newTable(L);
-
             for (auto c : _planets ) {
                 planets[c.first.c_str()] = Planet::_bindTable(c.second.get(), L);
             }
@@ -201,7 +212,7 @@ void PlanetSystem::eventOnUpdate() {
             auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
             auto planet = onUpdate(planets);
 
-            Planet::_encodeArgs(i.second.get(), planet);
+            Planet::_encodeArgs(i.second.get(), &planet);
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
@@ -209,7 +220,6 @@ void PlanetSystem::eventOnUpdate() {
 
             TimeControl::Get()._play = false;
         }
-
     }
 
 }

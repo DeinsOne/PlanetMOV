@@ -1,5 +1,6 @@
 {
     "version": "1.0.0",
+    "controller" : "samples/scripts/controller.lua",
     "planets": {
         "Sun" : {
             "size": 7.0,

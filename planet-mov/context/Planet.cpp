@@ -47,14 +47,14 @@ luabridge::LuaRef Planet::_bindTable(Planet* p, lua_State* L ) {
     return _args;
 }
 
-void Planet::_encodeArgs(Planet* p, luabridge::LuaRef table) {
-    table.push(p->_script._luaState);
-    luabridge::push(p->_script._luaState, luabridge::Nil());
+void Planet::_encodeArgs(Planet* p, luabridge::LuaRef* table) {
+    table->push(table->state());
+    luabridge::push(table->state(), luabridge::Nil());
 
-    while (lua_next(p->_script._luaState, -2)) {
-        luabridge::LuaRef key = luabridge::LuaRef::fromStack(p->_script._luaState, -2);
-        luabridge::LuaRef val = luabridge::LuaRef::fromStack(p->_script._luaState, -1);
-        
+    while (lua_next(table->state(), -2)) {
+        luabridge::LuaRef key = luabridge::LuaRef::fromStack(table->state(), -2);
+        luabridge::LuaRef val = luabridge::LuaRef::fromStack(table->state(), -1);
+
         if (val.isBool())
             p->_args[key.tostring().c_str()] = val.cast<bool>();
         else if (val.isNumber())
@@ -67,12 +67,12 @@ void Planet::_encodeArgs(Planet* p, luabridge::LuaRef table) {
             p->_args[key.tostring().c_str()][1] = vector.y;
         }
         else if (val.length() > 0 ) {
-            val.push(p->_script._luaState);
-            luabridge::push(p->_script._luaState, luabridge::Nil());
+            val.push(table->state());
+            luabridge::push(table->state(), luabridge::Nil());
 
-            while (lua_next(p->_script._luaState, -2)) {
-                luabridge::LuaRef key1 = luabridge::LuaRef::fromStack(p->_script._luaState, -2);
-                luabridge::LuaRef val1 = luabridge::LuaRef::fromStack(p->_script._luaState, -1);
+            while (lua_next(table->state(), -2)) {
+                luabridge::LuaRef key1 = luabridge::LuaRef::fromStack(table->state(), -2);
+                luabridge::LuaRef val1 = luabridge::LuaRef::fromStack(table->state(), -1);
 
                 if (val1[key1.cast<int>()].isBool()) {
                     for (int i = 0; i < val1.length(); i++ )
@@ -91,10 +91,10 @@ void Planet::_encodeArgs(Planet* p, luabridge::LuaRef table) {
                     p->_args[key1.cast<int>()][0] = val1[key1.cast<int>()]["y"].cast<float>();
                 }
 
-                lua_pop(p->_script._luaState, 1);
+                lua_pop(table->state(), 1);
             }
         }
 
-        lua_pop(p->_script._luaState, 1);
+        lua_pop(table->state(), 1);
     }
 }
