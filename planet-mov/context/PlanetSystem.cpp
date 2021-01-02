@@ -187,7 +187,7 @@ void PlanetSystem::eventOnSetup() {
 }
 
 void PlanetSystem::eventOnUpdate() {
-    if (luabridge::getGlobal(Controller::Get()._script._luaState, Labels[Labels_OnUpdate].first).isFunction()) {
+    if (!Controller::Get()._script._textSEntt.empty() && luabridge::getGlobal(Controller::Get()._script._luaState, Labels[Labels_OnUpdate].first).isFunction()) {
         Controller::Get().onUpdate();
         return;
     }
@@ -216,7 +216,7 @@ void PlanetSystem::eventOnUpdate() {
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
-            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", i.second->_script._pathSEntt + std::string(" -> ") +  e.what()) );
 
             TimeControl::Get()._play = false;
         }
