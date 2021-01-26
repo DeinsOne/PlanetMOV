@@ -185,10 +185,6 @@ void PlanetSystem::eventOnSetup() {
             TimeControl::Get()._play = false;
         }
     }
-    else {
-        for (auto i : _planets ) {
-            if (i.second->_script._textSEntt.empty() ) continue;
-
 }
 
 void PlanetSystem::eventOnUpdate() {
@@ -227,19 +223,3 @@ void PlanetSystem::eventOnUpdate() {
     }
 }
 
-void Planet::onUpdate() {
-    try {
-        auto onUpdate = luabridge::getGlobal(_script._luaState, Labels[Labels_OnUpdate].first );
-        auto planet = onUpdate();
-
-        if (onUpdate.isFunction() ) {
-            _pos = static_cast<Planet>(planet)._pos;
-            _size = static_cast<Planet>(planet)._size;
-            _mass = static_cast<Planet>(planet)._mass;
-        }
-    }
-    catch (std::exception& e ) {
-        CI_LOG_EXCEPTION("", e);
-        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
-    }
-}

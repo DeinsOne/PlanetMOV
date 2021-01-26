@@ -17,7 +17,6 @@ luabridge::LuaRef getPlanet(std::string name ) {
     auto _pl = PlanetSystem::Get()._planets.find(name);
     if (_pl->second) {
         auto table = Planet::_bindTable(_pl->second.get(), _pl->second->_script._luaState);
-        // printf("call: getPlanet(%s)\n", _pl->first.c_str());
 
         return table;
     }
@@ -27,7 +26,6 @@ luabridge::LuaRef getPlanet(std::string name ) {
 void LuaContext::_luaBindCore(lua_State* L ) {
     luabridge::getGlobalNamespace(L)
         .addFunction("getPlanet", getPlanet )
-        .addFunction("getPlanets", getPlanets )
     ;
 
 }
