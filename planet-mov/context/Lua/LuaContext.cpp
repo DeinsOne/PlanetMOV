@@ -11,42 +11,21 @@ extern "C" {
 #include "array"
 
 #include "PlanetSystem.h"
+#include "TimeControl.h"
 
-Planet* getPlanet(std::string name ) {
-    auto it = PlanetSystem::Get()._planets.find(name);
-    if (it->second )
-        return PlanetSystem::Get()._planets[name].get();
-    else
-        return nullptr;
-}
+luabridge::LuaRef getPlanet(std::string name ) {
+    auto _pl = PlanetSystem::Get()._planets.find(name);
+    if (_pl->second) {
+        auto table = Planet::_bindTable(_pl->second.get(), _pl->second->_script._luaState);
+        // printf("call: getPlanet(%s)\n", _pl->first.c_str());
 
-luabridge::LuaRef getPlanets(lua_State* L ) {
-    luabridge::LuaRef planets = luabridge::newTable(L );
-
-    std::map<std::string, std::shared_ptr<Planet>>::iterator iter;
-    for (iter = PlanetSystem::Get()._planets.begin(); iter != PlanetSystem::Get()._planets.end(); iter++) {
-        std::string id = iter->first;
-        Planet* planet = iter->second.get();
-        planets[id] = planet;
+        return table;
     }
-
-    return planets;
+    else return NULL;
 }
 
-// TODO:
 void LuaContext::_luaBindCore(lua_State* L ) {
     luabridge::getGlobalNamespace(L)
-        .beginClass<Planet>("Planet")
-            .addConstructor<void (*)(glm::vec2, float)>()
-            .addProperty("size", &Planet::_size )
-            .addProperty("pos", &Planet::_pos )
-            .addProperty("mass", &Planet::_mass )
-            .addFunction("printFields", &Planet::printFields )
-            .addFunction("onSetup", &Planet::onSetup )
-            .addFunction("onUpdate", &Planet::onUpdate )
-
-        .endClass()
-
         .addFunction("getPlanet", getPlanet )
         .addFunction("getPlanets", getPlanets )
     ;

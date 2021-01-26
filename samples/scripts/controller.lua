@@ -1,17 +1,16 @@
-function onUpdate()
-    planets = getPlanets()
+-- Controller
 
-    for key, value in pairs(planets ) do
-        if key == 'Earth' then
-            EarthS = 26
-            SunPos = getPlanet('Sun').pos
-            planets.Earth.pos = vec2(SunPos.x - math.sin(elapsedTime/3) * EarthS, SunPos.y + math.cos(elapsedTime/3) * EarthS )
-        elseif key == 'Moon' then
-            MooS = 9
-            EarthPos = getPlanet('Earth').pos
-            planets.Moon.pos = vec2(EarthPos.x - math.sin(elapsedTime*2) * MooS, EarthPos.y + math.cos(elapsedTime*2) * MooS )
-        end
-    end
+function onUpdate(planets)
+    planets.Earth.pos = vec2(
+        planets.Sun.pos.x - (math.sin(elapsedTime/3) * planets.Earth.EarthS),
+        planets.Sun.pos.y + (math.cos(elapsedTime/3) * planets.Earth.EarthS)
+    )
+
+    planets.Moon.pos = vec2(
+        planets.Earth.pos.x - (math.sin(elapsedTime/3) * planets.Moon.MoonS),
+        planets.Earth.pos.y + (math.cos(elapsedTime/3) * planets.Moon.MoonS)
+    )
+
 
     return planets
 end

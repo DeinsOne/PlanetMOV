@@ -8,16 +8,10 @@
 #include "CameraControl.h"
 #include "Controller.h"
 
-extern "C" {
-    #include "lua.h"
-    #include "lualib.h"
-    #include "lauxlib.h"
-    #include "luaconf.h"
-}
-
-#include "LuaBridge/LuaBridge.h"
+#include "LuaContext.h"
 
 #include "cinder/Log.h"
+#include "Controller.h"
 
 float lodExponent(float size ) {
     return 44;
@@ -35,31 +29,38 @@ void PlanetSystem::loadPlanets(std::string _file)
     catch (std::exception& e) {
         CI_LOG_EXCEPTION("", e );
         ErrorHandler::Get().push(Error(ErrorType::Error_Config, "Config not found", e.what()) );
+        return;
     }
 
     for (auto i : _planetsConfig["planets"].getMemberNames() ) {
-        float           _size = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Radius, 0.0f);
-        glm::vec2       _pos = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Pos, glm::vec2(0.0f, 0.0f));
         std::string     _fShader = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_FShader, "assets/shaders/default.fs.glsl");
+        std::string     _script = Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "");
 
 
         if (!i.empty() ) {
-            _planets[i] = std::make_shared<Planet>(_pos, _size);
+            _planets[i] = std::make_shared<Planet>();
 
             // Load shader
             auto er = _planets[i]->_shader.load(_fShader );
-            ErrorHandler::Get().push(er );
+            ErrorHandler::Get().push(er);
 
             // Load script
-            auto er1 = _planets[i]->_script.load(Json::getValueByLabel(_planetsConfig["planets"][i], Labels_Script, "") );
-            ErrorHandler::Get().push(er1 );
-        } 
+            auto er1 = _planets[i]->_script.load(_script );
+            ErrorHandler::Get().push(er1);
+
+            // Transfer arguments to planet 
+            Planet::_transferArgs(_planets[i].get(), _planetsConfig["planets"][i] );
+        }
 
     }
 
-    Controller::Get()._script.load(Json::getValueByLabel(_planetsConfig, Labels_Controller, "" ));
-    Controller::Get().check();
+    if (_planetsConfig[Labels[Labels_Controller].first].isString() ) {
+        auto er = Controller::Get()._script.load(_planetsConfig[Labels[Labels_Controller].first].asString());
+        ErrorHandler::Get().push(er);
 
+        Controller::Get()._script.check();
+    }
+    
 
     // FIXME: Check errors
     for (auto i : _planets ) {
@@ -110,24 +111,26 @@ void PlanetSystem::draw()
 {
     for (auto planet : _planets)
     {
-        ci::gl::setModelMatrix(ci::translate(glm::vec3(planet.second->_pos, 0.0)));
+        ci::gl::setModelMatrix(ci::translate(glm::vec3(Json::getValueByLabel(planet.second->_args, Labels_Pos, glm::vec2(0,0)), 0.0)));
 
         if (_selectedPlanet == planet.first)
         {
             ci::gl::getStockShader(ci::gl::ShaderDef().color())->bind();
             ci::gl::color(ci::Color::hex(_colorOfBorder));
-            ci::gl::drawSolidCircle({}, planet.second->_size + _radiusOfBorder, planet.second->_size * 12);
+            ci::gl::drawSolidCircle({}, 
+                Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f) + _radiusOfBorder, Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f) * 12
+            );
         }
 
         if (planet.second->_shader._shader ) {
             planet.second->_shader._shader->bind();
             planet.second->_shader.bindArgs(TimeControl::Get()._elapsedTime, TimeControl::Get().getDeltaTime() );
-            planet.second->_shader._shader->uniform("planetRadius", planet.second->_size );
+            planet.second->_shader._shader->uniform("planetRadius", Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f));
         }
         else
             ci::gl::color(ci::Color::hex(0xeeeeee));
 
-        ci::gl::drawSolidCircle({}, planet.second->_size, lodExponent(planet.second->_size) );
+        ci::gl::drawSolidCircle({}, Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f), lodExponent(Json::getValueByLabel(planet.second->_args, Labels_Radius, 1.0f)) );
     }
 
     // Draw separeate fbo to give possibility planet picking
@@ -138,11 +141,11 @@ void PlanetSystem::draw()
     auto planet = _planets.begin();
     for (int i = 0; i < _planets.size(); i++)
     {
-        ci::gl::setModelMatrix(ci::translate(glm::vec3(planet->second->_pos, 0.0)));
+        ci::gl::setModelMatrix(ci::translate(glm::vec3(Json::getValueByLabel(planet->second->_args, Labels_Pos, glm::vec2(0,0)), 0.0)));
 
         ci::gl::getStockShader(ci::gl::ShaderDef().color())->bind();
         ci::gl::color(0, ((float)(i + 1)) / ((float)_planets.size()), 0, 1);
-        ci::gl::drawSolidCircle({}, planet->second->_size, planet->second->_size * 12);
+        ci::gl::drawSolidCircle({}, Json::getValueByLabel(planet->second->_args, Labels_Radius, 1.0f), Json::getValueByLabel(planet->second->_args, Labels_Radius, 1.0f) * 12);
         planet++;
     }
 
@@ -169,15 +172,11 @@ void PlanetSystem::eventOnSetup() {
     for (auto i : _planets ) {
         if (i.second->_script._textSEntt.empty() ) continue;
 
-        i.second->onSetup();
-    }
-
-}
-
-void PlanetSystem::eventOnUpdate() {
-    if (!Controller::Get().empty() ) {
         try {
-            Controller::Get().onUpdate();
+            auto onSetup = luabridge::getGlobal(i.second->_script._luaState, Labels[Labels_OnSetup].first );
+            auto planet = onSetup(Planet::_bindTable(i.second.get(), i.second->_script._luaState) );
+
+            Planet::_encodeArgs(i.second.get(), &planet);
         }
         catch (std::exception& e ) {
             CI_LOG_EXCEPTION("", e);
@@ -190,43 +189,41 @@ void PlanetSystem::eventOnUpdate() {
         for (auto i : _planets ) {
             if (i.second->_script._textSEntt.empty() ) continue;
 
-            try {
-                lua_State* L = i.second->_script._luaState;
+}
+
+void PlanetSystem::eventOnUpdate() {
+    if (!Controller::Get()._script._textSEntt.empty() && luabridge::getGlobal(Controller::Get()._script._luaState, Labels[Labels_OnUpdate].first).isFunction()) {
+        Controller::Get().onUpdate();
+        return;
+    }
+
+    for (auto i : _planets ) {
+        if (i.second->_script._textSEntt.empty() ) continue;
+
+        try {
+            lua_State* L = i.second->_script._luaState;
 
                 // Bind variables
                 luabridge::setGlobal<float>(L, TimeControl::Get().getDeltaTime(), "deltaTime" );
                 luabridge::setGlobal<float>(L, TimeControl::Get()._elapsedTime, "elapsedTime" );
 
-                // Call onUpdate
-                i.second->onUpdate();
-            }
-            catch (std::exception& e ) {
-                CI_LOG_EXCEPTION("", e);
-                ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", e.what()) );
-
-                TimeControl::Get()._play = false;
+            // Pass planets list
+            auto planets = luabridge::newTable(L);
+            for (auto c : _planets ) {
+                planets[c.first.c_str()] = Planet::_bindTable(c.second.get(), L);
             }
 
+            // Call onUpdate
+            auto onUpdate = luabridge::getGlobal(L, Labels[Labels_OnUpdate].first );
+            auto planet = onUpdate(planets);
+
+            Planet::_encodeArgs(i.second.get(), &planet);
         }
-    }
+        catch (std::exception& e ) {
+            CI_LOG_EXCEPTION("", e);
+            ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onUpdate", i.second->_script._pathSEntt + std::string(" -> ") +  e.what()) );
 
-}
-
-
-void Planet::onSetup() {
-    try {
-        auto onSetup = luabridge::getGlobal(_script._luaState, Labels[Labels_OnSetup].first );
-        auto planet = onSetup();
-
-        if (onSetup.isFunction() ) {
-            _pos = static_cast<Planet>(planet)._pos;
-            _size = static_cast<Planet>(planet)._size;
-            _mass = static_cast<Planet>(planet)._mass;
         }
-    }
-    catch (std::exception& e ) {
-        CI_LOG_EXCEPTION("", e);
-        ErrorHandler::Get().push(Error(ErrorType::Error_Script, "Script: onSetup", e.what()) );
     }
 }
 

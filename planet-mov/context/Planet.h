@@ -6,25 +6,26 @@
 #include "LuaScript.h"
 #include "Shader.h"
 
+#include "jsonConfig.h"
+
 class Planet {
     public :
-        glm::vec2               _pos;
-        float                   _size;
-        float                   _mass;
-
         Shader                  _shader;
         LuaScript               _script;
 
+        Json::Value             _args;
 
-        Planet(glm::vec2 pos, float size) : _pos(pos), _size(size), _mass(1.0) {
-        }
-
-
-        void printFields() { printf("pos = { %f, %f }  |  size = %f  |  mass = %f\n", _pos.x, _pos.y, _size, _mass ); }
+        Planet() { }
 
 
-        void onSetup();
-        void onUpdate();
+        // Fills p->_args with value
+        static void _transferArgs(Planet* p, Json::Value& value);
+
+        // Fills p->_args with lua table
+        static void _encodeArgs(Planet* p, luabridge::LuaRef* table);
+
+        // Allocates new table on L and fills it with p->_args
+        static luabridge::LuaRef _bindTable(Planet* p, lua_State* L ); // Creates and returns lua table
 
 };
 

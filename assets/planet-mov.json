@@ -1,26 +1,27 @@
 {
     "version": "1.0.0",
+    "controller" : "samples/scripts/controller.lua",
     "planets": {
         "Sun" : {
-            "radius": 7.0,
-            "pos" : [ 0, 0 ],
-
+            "size": 7.0,
+            "pos" : [0,0],
             "fShader" : "samples/shaders/sunShader.fs.glsl"
         },
 
         "Earth" : {
             "fShader" : "samples/shaders/earthShader.fs.glsl",
-            "script" : "samples/scripts/earthScript.lua"
+            "script" : "samples/scripts/earthScript.lua",
+
+            "EarthS" : 26.0
         },
 
         "Moon" : {
             "fShader" : "samples/shaders/moonShader.fs.glsl",
-            "script" : "samples/scripts/moonScript.lua"
+            "script" : "samples/scripts/moonScript.lua",
+
+            "MoonS" : 9
         }
-
-    
     },
-
 
     "controller" : "samples/scripts/controller.lua"
 }

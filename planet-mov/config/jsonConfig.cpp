@@ -455,3 +455,169 @@ second:
 end:
     return defaultValue;
 }
+
+
+bool Json::getValueByStr(Json::Value &source, const char* label, bool defaultValue)
+{
+    if (source[label].empty() || source.isArray())
+        goto end;
+
+    try
+    {
+        bool returnValue = source[label].asBool();
+        return returnValue;
+    }
+    catch (...)
+    {
+    }
+
+end:
+    return defaultValue;
+}
+
+int Json::getValueByStr(Json::Value &source, const char* label, int defaultValue)
+{
+    if (source[label].empty() || source.isArray())
+        goto end;
+
+    try
+    {
+        int returnValue = source[label].asBool();
+        return returnValue;
+    }
+    catch (...)
+    {
+    }
+
+end:
+    return defaultValue;
+}
+
+float Json::getValueByStr(Json::Value &source, const char* label, float defaultValue)
+{
+    if (source[label].empty() || source.isArray())
+        goto end;
+
+    try
+    {
+        float returnValue = source[label].asFloat();
+        return returnValue;
+    }
+    catch (...)
+    {
+    }
+
+end:
+    return defaultValue;
+}
+
+double Json::getValueByStr(Json::Value &source, const char* label, double defaultValue)
+{
+    if (source[label].empty() || source.isArray())
+        goto end;
+
+    try
+    {
+        double returnValue = source[label].asDouble();
+        return returnValue;
+    }
+    catch (...)
+    {
+    }
+
+end:
+    return defaultValue;
+}
+
+const char *Json::getValueByStr(Json::Value &source, const char* label, const char *defaultValue)
+{
+    if (source[label].empty() || source.isArray())
+        goto end;
+
+    try
+    {
+        const char *returnValue = source[label].asCString();
+        return returnValue;
+    }
+    catch (...)
+    {
+    }
+
+end:
+    return defaultValue;
+}
+
+std::string Json::getValueByStr(Json::Value &source, const char* label, std::string defaultValue)
+{
+    if (source[label].empty() || source.isArray())
+        goto end;
+
+    try
+    {
+        std::string returnValue = source[label].asString();
+        return returnValue;
+    }
+    catch (...)
+    {
+    }
+
+end:
+    return defaultValue;
+}
+
+glm::vec2 Json::getValueByStr(Json::Value &source, const char* label, glm::vec2 defaultValue)
+{
+    if (source[label].empty() < 2)
+        goto end;
+
+    try
+    {
+        glm::vec2 returnValue = glm::vec2(source[label][0].asFloat(), source[label][1].asFloat());
+        return returnValue;
+    }
+    catch (...)
+    {
+        goto end;
+    }
+
+end:
+    return defaultValue;
+}
+
+glm::vec3 Json::getValueByStr(Json::Value &source, const char* label, glm::vec3 defaultValue)
+{
+    if (source[label].empty() < 3)
+        goto end;
+
+    try
+    {
+        glm::vec3 returnValue = glm::vec3(source[label][0].asFloat(), source[label][1].asFloat(), source[label][2].asFloat());
+        return returnValue;
+    }
+    catch (...)
+    {
+        goto end;
+    }
+
+end:
+    return defaultValue;
+}
+
+glm::vec4 Json::getValueByStr(Json::Value &source, const char* label, glm::vec4 defaultValue)
+{
+    if (source[label].empty() < 4)
+        goto end;
+
+    try
+    {
+        glm::vec4 returnValue = glm::vec4(source[label][0].asFloat(), source[label][1].asFloat(), source[label][2].asFloat(), source[label][3].asFloat());
+        return returnValue;
+    }
+    catch (...)
+    {
+        goto end;
+    }
+
+end:
+    return defaultValue;
+}

@@ -71,7 +71,8 @@ set(SRC_PLANET_MOVE
 	${APP_PATH}/planet-mov/Setup.cpp
 
 	${APP_PATH}/planet-mov/context/PlanetSystem.cpp
-	${APP_PATH}/planet-mov/context/Controller.cpp
+	${APP_PATH}/planet-mov/context/Controller/Controller.cpp
+	${APP_PATH}/planet-mov/context/Planet.cpp
 	${APP_PATH}/planet-mov/CameraControl.cpp
 	${APP_PATH}/planet-mov/context/Lua/LuaScript.cpp
 	${APP_PATH}/planet-mov/context/Lua/LuaContext.cpp
@@ -84,6 +85,7 @@ set(INC_PLANET_MOVE
 	${APP_PATH}/planet-mov/context
 	${APP_PATH}/planet-mov/context/Lua
 	${APP_PATH}/planet-mov/context/Shader
+	${APP_PATH}/planet-mov/context/Controller
 
 	# Utils
 	${APP_PATH}/planet-mov/utils/jsoncpp/include

@@ -37,7 +37,7 @@ static std::vector<std::pair<const char*, const char*> > Labels = std::initializ
 
     { "script", "luaScript" },                      // Labels_Script
 
-    { "controller", "luaController" },
+    { "controller", "" },                      // Labels_Controller
 
     // Function names
     { "onSetup", "" },                              // Labels_OnSetup
